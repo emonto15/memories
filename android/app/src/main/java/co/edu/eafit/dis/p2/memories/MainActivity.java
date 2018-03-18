@@ -49,16 +49,10 @@ public class MainActivity extends FlutterActivity {
                 new MethodCallHandler() {
                     @Override
                     public void onMethodCall(MethodCall call, Result result) {
-                        if (call.method.equals("getBatteryLevel")) {
-                            Log.d("Path", (String)call.argument("path"));
-                            //String path = "/storage/2F94-BF11/Pictures/Fotos/IMG-20161109-WA0006.jpeg";
-                            int batteryLevel = getBatteryLevel((String)call.argument("path"));
+                        if (call.method.equals("sendEmotion")) {
+                            sendEmotion((String)call.argument("path"));
+                            result.success("success");
 
-                            if (batteryLevel != -1) {
-                                result.success(batteryLevel);
-                            } else {
-                                result.error("UNAVAILABLE", "Battery level not available.", null);
-                            }
                         } else {
                             result.notImplemented();
                         }
@@ -66,24 +60,11 @@ public class MainActivity extends FlutterActivity {
                 });
     }
 
-    private int getBatteryLevel(String path) {
-        int batteryLevel = -1;
-        if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
-            BatteryManager batteryManager = (BatteryManager) getSystemService(BATTERY_SERVICE);
-            batteryLevel = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
-        } else {
-            Intent intent = new ContextWrapper(getApplicationContext()).
-                    registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-            batteryLevel = (intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) * 100) /
-                    intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
-        }
-
+    private void sendEmotion(String path) {
         getEmotion(path);
-
-        return batteryLevel;
     }
 
-    public byte[] toBase64(String filePath) {
+    public static byte[] toBase64(String filePath) {
 
         File imgFile = new File(filePath);
         if(imgFile.exists())
@@ -93,27 +74,19 @@ public class MainActivity extends FlutterActivity {
             bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             return baos.toByteArray();
         }
-
-        //Bitmap bm = BitmapFactory.decodeFile(filePath);
-
+        Log.e("Base 64 Error", " toBase64 error");
         return null;
 
     }
 
-    public String getEmotion(String path) {
+    public void getEmotion(String path) {
         // run the GetEmotionCall class in the background
         GetEmotionCall emotionCall = new GetEmotionCall(path);
-        Log.d("path", path);
-        try {
-            return emotionCall.execute().get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-        return "";
+        emotionCall.execute();
     }
 
 
-    private class GetEmotionCall extends AsyncTask<Void, Void, String> {
+    private static class GetEmotionCall extends AsyncTask<Void, Void, String> {
         private String path;
 
         GetEmotionCall(String path) {
@@ -150,16 +123,13 @@ public class MainActivity extends FlutterActivity {
                 // getting a response and assigning it to the string res
                 HttpResponse response = httpclient.execute(request);
                 HttpEntity entity = response.getEntity();
-                String res = EntityUtils.toString(entity);
+                return EntityUtils.toString(entity);
 
-                Log.d("res", res);
-                return res;
             } catch (Exception e) {
                 return "null";
             }
 
         }
-
 
         @Override
         protected void onPostExecute(String result) {
@@ -185,11 +155,15 @@ public class MainActivity extends FlutterActivity {
                     }
                     emotions += emotion + "\n";
                 }
-                Log.d("gol", "AQUIIIIIIIIIIIIIIIII"+ emotions);
+                Log.d("gol", emotions);
 
 
             } catch (JSONException e) {
-                Log.d("no gol", "AQUIIIIIIIIIIIIIIIIINo emotion detected. Try again later");
+                if (result.contains("anger")) {
+                    //nothing wrong.
+                } else {
+                    Log.d("Face api error:", e.getMessage());
+                }
             }
 
         }

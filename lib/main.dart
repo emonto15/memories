@@ -34,18 +34,13 @@ class _CameraExampleHomeState extends State<CameraExampleHome> {
   String imagePath;
   int pictureCount = 0;
 
-  Future<Null> _getBatteryLevel(String path) async {
-    String batteryLevel;
+  Future<Null> _sendEmotion(String path) async {
     try {
-      final int result = await platform.invokeMethod('getBatteryLevel',<String, dynamic>{"path":path});
-      batteryLevel = 'Battery level at $result % .';
-      print(batteryLevel);
+      await platform.invokeMethod('sendEmotion',<String, dynamic>{"path":path});
     } on PlatformException catch (e) {
-      batteryLevel = "Failed to get battery level: '${e.message}'.";
+      print("Failed to send emotion: '${e.message}'.");
     }
-
   }
-
 
   @override
   void initState() {
@@ -175,7 +170,7 @@ class _CameraExampleHomeState extends State<CameraExampleHome> {
       setState(
             () {
           imagePath = path;
-          _getBatteryLevel(path);
+          _sendEmotion(path);
         },
       );
     }
