@@ -15,19 +15,8 @@ class CameraExampleHome extends StatefulWidget {
   }
 }
 
-IconData cameraLensIcon(CameraLensDirection direction) {
-  switch (direction) {
-    case CameraLensDirection.back:
-      return Icons.camera_rear;
-    case CameraLensDirection.front:
-      return Icons.camera_front;
-    case CameraLensDirection.external:
-      return Icons.camera;
-  }
-  throw new ArgumentError('Unknown lens direction');
-}
-
 class _CameraExampleHomeState extends State<CameraExampleHome> {
+  CameraDescription cameraD;
   static const platform = const MethodChannel('samples.flutter.io/battery');
   bool opening = false;
   CameraController controller;
@@ -47,42 +36,16 @@ class _CameraExampleHomeState extends State<CameraExampleHome> {
     super.initState();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     final List<Widget> headerChildren = <Widget>[];
-
-    final List<Widget> cameraList = <Widget>[];
-
-    if (cameras.isEmpty) {
-      cameraList.add(const Text('No cameras found'));
-    } else {
       for (CameraDescription cameraDescription in cameras) {
-        cameraList.add(
-          new SizedBox(
-            width: 90.0,
-            child: new RadioListTile<CameraDescription>(
-              title: new Icon(cameraLensIcon(cameraDescription.lensDirection)),
-              groupValue: controller?.description,
-              value: cameraDescription,
-              onChanged: (CameraDescription newValue) async {
-                final CameraController tempController = controller;
-                controller = null;
-                await tempController?.dispose();
-                controller =
-                new CameraController(newValue, ResolutionPreset.high);
-                await controller.initialize();
-                setState(() {});
-              },
-            ),
-          ),
-        );
+        if(cameraDescription.lensDirection == CameraLensDirection.front){
+          cameraD = cameraDescription;
+        }
       }
-    }
-
-    headerChildren.add(new Column(children: cameraList));
-    if (controller != null) {
-      headerChildren.add(playPauseButton());
-    }
     if (imagePath != null) {
       headerChildren.add(imageWidget());
     }
@@ -111,15 +74,9 @@ class _CameraExampleHomeState extends State<CameraExampleHome> {
       );
     }
     return new Scaffold(
-      appBar: new AppBar(
-        title: const Text('Camera example'),
-      ),
       body: new Column(children: columnChildren),
-      floatingActionButton: (controller == null)
-          ? null
-          : new FloatingActionButton(
-        child: const Icon(Icons.camera),
-        onPressed: controller.value.isStarted ? capture : null,
+      floatingActionButton: new FloatingActionButton(child: const Icon(Icons.camera),
+        onPressed: capture
       ),
     );
   }
@@ -137,25 +94,15 @@ class _CameraExampleHomeState extends State<CameraExampleHome> {
     );
   }
 
-  Widget playPauseButton() {
-    return new FlatButton(
-      onPressed: () {
-        setState(
-              () {
-            if (controller.value.isStarted) {
-              controller.stop();
-            } else {
-              controller.start();
-            }
-          },
-        );
-      },
-      child:
-      new Icon(controller.value.isStarted ? Icons.pause : Icons.play_arrow),
-    );
-  }
 
   Future<Null> capture() async {
+    final CameraController tempController = controller;
+    controller = null;
+    await tempController?.dispose();
+    controller =
+    new CameraController(cameraD, ResolutionPreset.high);
+    await controller.initialize();
+    setState(() {});
     if (controller.value.isStarted) {
       final Directory tempDir = await getTemporaryDirectory();
       if (!mounted) {
