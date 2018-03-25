@@ -14,7 +14,7 @@ class LandingPage extends StatelessWidget {
         child: new Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            new Text("Comenzar Juego", style: new TextStyle(color: Colors.white, fontSize: 38.0, fontWeight: FontWeight.bold),),
+            new Text("Comenzar Actividades", style: new TextStyle(color: Colors.white, fontSize: 38.0, fontWeight: FontWeight.bold),),
             new Text("Toca para comenzar!", style: new TextStyle(color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.bold),)
           ],
         ),
