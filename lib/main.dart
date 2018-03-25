@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import './FirstPage.dart' as first;
 import './SecondPage.dart' as second;
 import './ThirdPage.dart' as third;
-import './Activities.dart' as activities;
 import './landing_page.dart' as landingActivities;
 import 'dart:async';
 import 'package:camera/camera.dart';
@@ -64,7 +63,7 @@ class MyTabsState extends State<MyTabs> with SingleTickerProviderStateMixin {
               new second.Second(),
               new third.Third(),
               new second.Second(),
-              new landingActivities.LandingPage()// new activities.CameraExampleHome(cameras: cameras)
+              new landingActivities.LandingPage(cameras: cameras)// new activities.CameraExampleHome(cameras: cameras)
             ]
         )
     );

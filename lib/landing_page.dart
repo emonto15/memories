@@ -1,13 +1,16 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import './quiz_page.dart';
+import './Activities.dart';
 
 class LandingPage extends StatelessWidget {
+  final List<CameraDescription> cameras;
+  LandingPage({this.cameras});
   @override
   Widget build(BuildContext context) {
     return new Material(
       color: Colors.orangeAccent,
       child: new InkWell(
-        onTap: () => Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new QuizPage())),
+        onTap: () => Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new QuizPage(cameras: cameras))),
         child: new Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[

@@ -1,33 +1,47 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:memories/main.dart' as main;
+import 'package:path_provider/path_provider.dart';
 
+import './utils/question.dart';
+import './utils/quiz.dart';
 
-class CameraExampleHome extends StatefulWidget {
+import './UI/answer_button.dart';
+import './UI/question_text.dart';
+import './UI/correct_wrong_overlay.dart';
+
+import './score_page.dart';
+
+class QuizPage extends StatefulWidget {
   final List<CameraDescription> cameras;
-  CameraExampleHome ({this.cameras});
-
+  QuizPage ({this.cameras});
   @override
-  _CameraExampleHomeState createState() {
-    return new _CameraExampleHomeState(cameras: cameras);
-  }
+  State createState() => new QuizPageState(cameras: cameras);
 }
 
-class _CameraExampleHomeState extends State<CameraExampleHome> {
+class QuizPageState extends State<QuizPage> {
   final List<CameraDescription> cameras;
-  _CameraExampleHomeState({this.cameras});
+  QuizPageState({this.cameras});
   CameraDescription cameraD;
   static const platform = const MethodChannel('samples.flutter.io/battery');
   bool opening = false;
   CameraController controller;
   String imagePath;
   int pictureCount = 0;
+
+  Question currentQuestion;
+  Quiz quiz = new Quiz([
+    new Question("Alf is human", ["si","no","no se","no respondo"],"no"),
+    new Question("En venezuela hay democracia",["si","no","no se","no respondo"],"no"),
+    new Question("Flutter es maravilloso", ["si","no","no se","no respondo"],"si")
+  ]);
+  String questionText;
+  int questionNumber;
+  bool isCorrect;
+  bool overlayShouldBeVisible = false;
 
   Future<Null> _sendEmotion(String path) async {
     try {
@@ -37,11 +51,23 @@ class _CameraExampleHomeState extends State<CameraExampleHome> {
     }
   }
 
+
   @override
   void initState() {
     super.initState();
+    currentQuestion = quiz.nextQuestion;
+    questionText = currentQuestion.question;
+    questionNumber = quiz.questionNumber;
   }
 
+  void handleAnswer(String answer) {
+    capture();
+    isCorrect = (currentQuestion.answer == answer);
+    quiz.answer(isCorrect);
+    this.setState(() {
+      overlayShouldBeVisible = true;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,17 +76,35 @@ class _CameraExampleHomeState extends State<CameraExampleHome> {
         cameraD = cameraDescription;
       }
     }
-
-
-    return new Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          new RaisedButton(child: const Icon(Icons.camera),
-              onPressed: capture),
-          const Text('Bahamas')
-        ]
+    return new Stack(
+      fit: StackFit.expand,
+      children: <Widget>[
+        new Column( // This is our main page
+          children: <Widget>[
+            new QuestionText(questionText, questionNumber),
+            new AnswerButton(currentQuestion.options[0],currentQuestion.answer, () => handleAnswer(currentQuestion.options[0])),
+            new AnswerButton(currentQuestion.options[1],currentQuestion.answer, () => handleAnswer(currentQuestion.options[1])),
+            new AnswerButton(currentQuestion.options[2],currentQuestion.answer, () => handleAnswer(currentQuestion.options[2])),
+            new AnswerButton(currentQuestion.options[3],currentQuestion.answer, () => handleAnswer(currentQuestion.options[3]))
+          ],
+        ),
+        overlayShouldBeVisible == true ? new CorrectWrongOverlay(
+            isCorrect,
+                () {
+              if (quiz.length == questionNumber) {
+                Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(builder: (BuildContext context) => new ScorePage(quiz.score, quiz.length)), (Route route) => route == null);
+                return;
+              }
+              currentQuestion = quiz.nextQuestion;
+              this.setState(() {
+                overlayShouldBeVisible = false;
+                questionText = currentQuestion.question;
+                questionNumber = quiz.questionNumber;
+              });
+            }
+        ) : new Container()
+      ],
     );
-
   }
 
   Future<Null> capture() async {
@@ -94,10 +138,3 @@ class _CameraExampleHomeState extends State<CameraExampleHome> {
     }
   }
 }
-
-
-
-/*Future<Null> main() async {
-  cameras = await availableCameras();
-  runApp(new MaterialApp(home: new CameraExampleHome()));
-}*/
