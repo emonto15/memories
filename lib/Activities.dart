@@ -5,6 +5,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:clock/clock.dart' as clock;
 
 import './utils/question.dart';
 import './utils/quiz.dart';
@@ -14,6 +15,8 @@ import './UI/question_text.dart';
 import './UI/correct_wrong_overlay.dart';
 
 import './score_page.dart';
+
+
 
 class QuizPage extends StatefulWidget {
   final List<CameraDescription> cameras;
@@ -34,14 +37,16 @@ class QuizPageState extends State<QuizPage> {
 
   Question currentQuestion;
   Quiz quiz = new Quiz([
-    new Question("Alf is human", ["si","no","no se","no respondo"],"no"),
-    new Question("En venezuela hay democracia",["si","no","no se","no respondo"],"no"),
-    new Question("Flutter es maravilloso", ["si","no","no se","no respondo"],"si")
+    new Question("Venus es un:", ["Planeta","Animal","Vegetal","Objeto"],"Planeta"),
+    new Question("El cuarto día de la semana es:",["Lunes","Viernes","Jueves","Sábado"],"Jueves"),
+    new Question("La madre de su madre es su:", ["Tia","Hermana","Madre","Abuela"],"Abuela")
   ]);
   String questionText;
   int questionNumber;
   bool isCorrect;
   bool overlayShouldBeVisible = false;
+  var stopwatch = clock.getStopwatch();
+
 
   Future<Null> _sendEmotion(String path) async {
     try {
@@ -58,6 +63,7 @@ class QuizPageState extends State<QuizPage> {
     currentQuestion = quiz.nextQuestion;
     questionText = currentQuestion.question;
     questionNumber = quiz.questionNumber;
+    stopwatch.start();
   }
 
   void handleAnswer(String answer) {
@@ -65,6 +71,9 @@ class QuizPageState extends State<QuizPage> {
     isCorrect = (currentQuestion.answer == answer);
     quiz.answer(isCorrect);
     this.setState(() {
+      stopwatch.stop();
+      print((stopwatch.elapsedMilliseconds/1000).toString() + "seconds");
+      stopwatch.reset();
       overlayShouldBeVisible = true;
     });
   }
@@ -80,12 +89,24 @@ class QuizPageState extends State<QuizPage> {
       fit: StackFit.expand,
       children: <Widget>[
         new Column( // This is our main page
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             new QuestionText(questionText, questionNumber),
-            new AnswerButton(currentQuestion.options[0],currentQuestion.answer, () => handleAnswer(currentQuestion.options[0])),
-            new AnswerButton(currentQuestion.options[1],currentQuestion.answer, () => handleAnswer(currentQuestion.options[1])),
-            new AnswerButton(currentQuestion.options[2],currentQuestion.answer, () => handleAnswer(currentQuestion.options[2])),
-            new AnswerButton(currentQuestion.options[3],currentQuestion.answer, () => handleAnswer(currentQuestion.options[3]))
+            new Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      new Row(children: <Widget>[
+                        new AnswerButton(currentQuestion.options[0],currentQuestion.answer, () => handleAnswer(currentQuestion.options[0])),
+                        new AnswerButton(currentQuestion.options[1],currentQuestion.answer, () => handleAnswer(currentQuestion.options[1])),
+                      ]
+                      ),
+                      new Row(children: <Widget>[
+                        new AnswerButton(currentQuestion.options[2],currentQuestion.answer, () => handleAnswer(currentQuestion.options[2])),
+                        new AnswerButton(currentQuestion.options[3],currentQuestion.answer, () => handleAnswer(currentQuestion.options[3]))
+                      ]
+                      )
+                    ]
+            )
           ],
         ),
         overlayShouldBeVisible == true ? new CorrectWrongOverlay(
@@ -97,6 +118,7 @@ class QuizPageState extends State<QuizPage> {
               }
               currentQuestion = quiz.nextQuestion;
               this.setState(() {
+                stopwatch.start();
                 overlayShouldBeVisible = false;
                 questionText = currentQuestion.question;
                 questionNumber = quiz.questionNumber;

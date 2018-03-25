@@ -2,6 +2,7 @@ name: memories
 description: An App for alzheimer
 
 dependencies:
+  clock: 0.1.2
   camera: 0.1.0
   path_provider: 0.4.0
   flutter:

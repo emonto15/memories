@@ -41,16 +41,16 @@ class MyTabsState extends State<MyTabs> with SingleTickerProviderStateMixin {
     return new Scaffold(
         resizeToAvoidBottomPadding:false,
         appBar: new AppBar(
-            title: new Text("Pages"),
+            title: new Center(child: new Text("Memories")),
             backgroundColor: new Color(0xFF7E57C2),
             bottom: new TabBar(
               controller: controller,
               tabs: <Tab>[
-                new Tab(icon: new Icon(Icons.arrow_forward)),
-                new Tab(icon: new Icon(Icons.arrow_downward)),
-                new Tab(icon: new Icon(Icons.arrow_back)),
-                new Tab(icon: new Icon(Icons.pie_chart)),
-                new Tab(icon: new Icon(Icons.games))
+                new Tab(child: new Text("Perfil", style: new TextStyle(fontSize: 18.0))),
+                new Tab(child: new Text("Examen", style: new TextStyle(fontSize: 18.0))),
+                new Tab(child: new Text("Actividades", style: new TextStyle(fontSize: 18.0))),
+                new Tab(child: new Text("Musicoterapia", style: new TextStyle(fontSize: 18.0))),
+                new Tab(child: new Text("Reportes", style: new TextStyle(fontSize: 18.0)))
               ],
             )
         ),
@@ -59,11 +59,11 @@ class MyTabsState extends State<MyTabs> with SingleTickerProviderStateMixin {
             physics: neverScrollableScrollPhysics,
             controller: controller,
             children: <Widget>[
+              new second.Second(),
               new first.ExpansionPanelsDemo(),
-              new second.Second(),
+              new landingActivities.LandingPage(cameras: cameras),
               new third.Third(),
-              new second.Second(),
-              new landingActivities.LandingPage(cameras: cameras)// new activities.CameraExampleHome(cameras: cameras)
+              new second.Second()
             ]
         )
     );

@@ -43,12 +43,12 @@ class QuestionTextState extends State<QuestionText> with SingleTickerProviderSta
   @override
   Widget build(BuildContext context) {
     return new Material(
-      color: Colors.white,
+      color: new Color(0xFF7E57C2),
       child: new Padding(
-        padding: new EdgeInsets.symmetric(vertical: 20.0),
+        padding: new EdgeInsets.symmetric(vertical: 180.0),
         child: new Center(
-          child: new Text("Declaración " + widget._questionNumber.toString() + ": " + widget._question,
-            style: new TextStyle(fontSize: _fontSizeAnimation.value * 15),
+          child: new Text(widget._question,
+            style: new TextStyle(fontSize: _fontSizeAnimation.value * 50, fontWeight: FontWeight.bold, color: Colors.white ),
           ),
         )
       ),
