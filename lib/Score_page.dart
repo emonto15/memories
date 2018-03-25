@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import './landing_page.dart';
+import './Landing_page.dart';
 import './main.dart' as main;
 
 class ScorePage extends StatelessWidget {

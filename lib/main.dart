@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import './FirstPage.dart' as first;
-import './SecondPage.dart' as second;
-import './ThirdPage.dart' as third;
-import './landing_page.dart' as landingActivities;
+import './Perfil.dart' as perfil;
+import './Examen.dart' as examen;
+import './Reportes.dart' as reportes;
+import './Landing_page.dart' as landingActivities;
 import 'dart:async';
 import 'package:camera/camera.dart';
 List<CameraDescription> cameras;
@@ -59,11 +59,11 @@ class MyTabsState extends State<MyTabs> with SingleTickerProviderStateMixin {
             physics: neverScrollableScrollPhysics,
             controller: controller,
             children: <Widget>[
-              new second.Second(),
-              new first.ExpansionPanelsDemo(),
+              new perfil.Perfil(),
+              new examen.MyTabsTwo(),
               new landingActivities.LandingPage(cameras: cameras),
-              new third.Third(),
-              new second.Second()
+              new reportes.Report(),
+              new reportes.Report()
             ]
         )
     );
