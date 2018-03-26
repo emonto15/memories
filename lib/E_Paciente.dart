@@ -42,14 +42,10 @@ class _ExamenPaciente extends State<ExamenPaciente> {
     'Junio',
     'Julio',
     'Agosto',
-    'Junio',
-    'Julio',
-    'Agosto',
     'Septiembre',
     'Octubre',
     'Noviembre',
-    'Diciembre',
-    'No responde'
+    'Diciembre'
   ];
   String _monthOfYear;
   final List<String> _years = <String>[
@@ -486,7 +482,7 @@ class _DateTimePicker extends StatelessWidget {
     final DateTime picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
-        firstDate: new DateTime(2015, 8),
+        firstDate: new DateTime(1918),
         lastDate: new DateTime(2101)
     );
     if (picked != null && picked != selectedDate)

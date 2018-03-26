@@ -4,15 +4,19 @@ class QuestionText extends StatefulWidget {
 
   final String _question;
   final int _questionNumber;
+  bool hasImage;
+  String imagePath;
 
-  QuestionText(this._question, this._questionNumber);
+  QuestionText(this._question, this._questionNumber, this.hasImage, this.imagePath);
 
   @override
-  State createState() => new QuestionTextState();
+  State createState() => new QuestionTextState(hasImage: hasImage, imagePath: imagePath);
 }
 
 class QuestionTextState extends State<QuestionText> with SingleTickerProviderStateMixin {
-
+  final bool hasImage;
+  final String imagePath;
+  QuestionTextState({this.hasImage, this.imagePath});
   Animation<double> _fontSizeAnimation;
   AnimationController _fontSizeAnimationController;
 
@@ -42,16 +46,38 @@ class QuestionTextState extends State<QuestionText> with SingleTickerProviderSta
 
   @override
   Widget build(BuildContext context) {
-    return new Material(
-      color: new Color(0xFF7E57C2),
-      child: new Padding(
-        padding: new EdgeInsets.symmetric(vertical: 180.0),
-        child: new Center(
-          child: new Text(widget._question,
-            style: new TextStyle(fontSize: _fontSizeAnimation.value * 50, fontWeight: FontWeight.bold, color: Colors.white ),
-          ),
-        )
-      ),
-    );
+    if(widget.hasImage == true){
+      return new Material(
+        color: new Color(0xFF7E57C2),
+        child: new Padding(
+            padding: new EdgeInsets.symmetric(vertical: 70.0),
+            child: new Center(
+              child: new Column(children: <Widget>[
+                new Text(widget._question,
+                  style: new TextStyle(fontSize: _fontSizeAnimation.value * 50, fontWeight: FontWeight.bold, color: Colors.white ),
+                ),
+                new Container(padding: new EdgeInsets.only(top:20.0),
+                    child: new Image(image: new AssetImage(widget.imagePath), width: 200.0, height: 200.0)
+                )
+              ],
+              ),
+            )
+        ),
+      );
+    }else{
+      return new Material(
+        color: new Color(0xFF7E57C2),
+        child: new Padding(
+            padding: new EdgeInsets.symmetric(vertical: 180.0),
+            child: new Center(
+              child: new Text(widget._question,
+                  style: new TextStyle(fontSize: _fontSizeAnimation.value * 50, fontWeight: FontWeight.bold, color: Colors.white ),
+                )
+              ),
+            )
+        );
+    }
+
+
   }
 }
