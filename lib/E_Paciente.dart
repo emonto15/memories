@@ -118,25 +118,27 @@ class _ExamenPaciente extends State<ExamenPaciente> {
             children: <Widget>[
               new Text("Memoria:", style: new TextStyle(
                   fontWeight: FontWeight.bold, fontSize: 25.0)),
-              new Container(padding: new EdgeInsets.only(top: 10.0),child: new Text("1. ¿Tiene Ud. problemas con su memoria?",
-                  style: new TextStyle(fontSize: 18.0))),
-              new Container( padding: new EdgeInsets.only(top:5.0, bottom: 2.0 ),child: new Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    new Radio<int>(
-                        value: 0,
-                        groupValue: radioValue,
-                        onChanged: handleRadioValueChanged
-                    ),
-                    const Text("Si")
-                    ,
-                    new Radio<int>(
-                        value: 1,
-                        groupValue: radioValue,
-                        onChanged: handleRadioValueChanged
-                    ),
-                    const Text("No")
-                  ]) )
+              new Container(padding: new EdgeInsets.only(top: 10.0),
+                  child: new Text("1. ¿Tiene Ud. problemas con su memoria?",
+                      style: new TextStyle(fontSize: 18.0))),
+              new Container(padding: new EdgeInsets.only(top: 5.0, bottom: 2.0),
+                  child: new Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        new Radio<int>(
+                            value: 0,
+                            groupValue: radioValue,
+                            onChanged: handleRadioValueChanged
+                        ),
+                        const Text("Si")
+                        ,
+                        new Radio<int>(
+                            value: 1,
+                            groupValue: radioValue,
+                            onChanged: handleRadioValueChanged
+                        ),
+                        const Text("No")
+                      ]))
               ,
               new Text("2. ¿Cuándo nació?",
                   style: new TextStyle(fontSize: 18.0)),
@@ -234,8 +236,7 @@ class _ExamenPaciente extends State<ExamenPaciente> {
               new Container(padding: new EdgeInsets.only(top: 60.0),
                   child: new Text("Orientación:", style: new TextStyle(
                       fontWeight: FontWeight.bold, fontSize: 25.0))
-              )
-              ,
+              ),
               new Container(padding: new EdgeInsets.only(
                   right: 0.0, top: 20.0, left: 0.0, bottom: 0.0),
                   child: new Text(
@@ -256,8 +257,9 @@ class _ExamenPaciente extends State<ExamenPaciente> {
                   });
                 },
               ),
-              new Container(padding: new EdgeInsets.only(
-                  right: 0.0, top: 20.0, left: 0.0, bottom: 0.0),
+              new Container(
+                  padding: new EdgeInsets.only(
+                      right: 0.0, top: 20.0, left: 0.0, bottom: 0.0),
                   child: new Text(
                       "2. ¿Qué día de la semana es hoy?",
                       style: new TextStyle(fontSize: 18.0)))
@@ -369,7 +371,8 @@ class _ExamenPaciente extends State<ExamenPaciente> {
                 ),
               ),
               new Container(padding: new EdgeInsets.only(top: 60.0),
-                  child: new Text("Resolución de problemas:", style: new TextStyle(
+                  child: new Text(
+                      "Resolución de problemas:", style: new TextStyle(
                       fontWeight: FontWeight.bold, fontSize: 25.0))
               ),
               new Container(padding: new EdgeInsets.only(
@@ -433,10 +436,12 @@ class _ExamenPaciente extends State<ExamenPaciente> {
                   }).toList(),
                 ),
               ),
-              new Container(padding: new EdgeInsets.all(20.0),child: new Center(
+              new Container(
+                  padding: new EdgeInsets.all(20.0), child: new Center(
                 child: new RaisedButton(
                   color: new Color(0xFF7E57C2),
-                  child: new Text('Enviar', style: new TextStyle(color: Colors.white, fontSize: 18.0)),
+                  child: new Text('Enviar', style: new TextStyle(
+                      color: Colors.white, fontSize: 18.0)),
                   onPressed: _handleSubmitted,
                 ),
               ))
