@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-
-void main() => runApp(new MyApp());
+import 'main.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -61,13 +59,11 @@ class LoginPageState extends State<LoginPage>
                     inputDecorationTheme: new InputDecorationTheme(
                       // hintStyle: new TextStyle(color: Colors.blue, fontSize: 20.0),
                       labelStyle:
-                      new TextStyle(color: Colors.white, fontSize: 15.0),
+                      new TextStyle(color: Colors.white, fontSize: 20.0),
                     )
                 ),
                 isMaterialAppTheme: true,
-                child: new Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                child: new ListView(
                   children: <Widget>[
                     new AnimatedContainer(
                         duration: const Duration(milliseconds: 300),
@@ -81,7 +77,8 @@ class LoginPageState extends State<LoginPage>
                     ),
                     new AnimatedContainer(
                       duration: const Duration(milliseconds: 300),
-                      padding: const EdgeInsets.symmetric(horizontal: 500.0),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 500.0),
                       child: new Form(
                         autovalidate: true,
                         child: new Column(
@@ -108,8 +105,9 @@ class LoginPageState extends State<LoginPage>
                                 color: new Color(0xFF5E35B1),
                                 splashColor: new Color(0xFF9575CD),
                                 textColor: Colors.white,
-                                child: new Text("Iniciar Sesion"),
-                                onPressed: () {},
+                                child: new Text("Iniciar Sesion",
+                                    style: new TextStyle(fontSize: 20.0)),
+                                onPressed:() => Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (BuildContext context) => new MyTabs())),
                               ),
                             )
 
@@ -120,8 +118,7 @@ class LoginPageState extends State<LoginPage>
                   ],
                 ),
               )
-            ]
-            )
+            ])
         )
     );
   }

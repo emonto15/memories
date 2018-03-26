@@ -5,12 +5,19 @@ import './Reportes.dart' as reportes;
 import './Landing_page.dart' as landingActivities;
 import 'dart:async';
 import 'package:camera/camera.dart';
+import 'login.dart';
 List<CameraDescription> cameras;
 Future<Null> main() async {
   cameras = await availableCameras();
-  runApp(new MaterialApp(
-      home: new MyTabs()
-  ));
+  if(true == true){
+    runApp(new MaterialApp(
+        home: new LoginPage()
+    ));
+  }else {
+    runApp(new MaterialApp(
+        home: new MyTabs()
+    ));
+  }
 }
 
 class MyTabs extends StatefulWidget {
