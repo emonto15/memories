@@ -46,7 +46,7 @@ class MyTabsTwoState extends State<MyTabsTwo> with SingleTickerProviderStateMixi
         ),
 
         body: new TabBarView(
-            physics: new NeverScrollableScrollPhysics(),
+            physics: new AlwaysScrollableScrollPhysics(),
             controller: controller,
             children: <Widget>[
               new ExamenPaciente(),
