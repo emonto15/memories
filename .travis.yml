@@ -18,4 +18,4 @@ script:
 cache:
   directories:
     - $HOME/.pub-cache
-languague: flutter
+language: flutter
