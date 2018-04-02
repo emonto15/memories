@@ -2,25 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'main.dart';
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return new MaterialApp(
-      theme: new ThemeData(primarySwatch: Colors.blue),
-      home: new LoginPage(),
-    );
-  }
-}
-
 class LoginPage extends StatefulWidget {
   @override
   State createState() => new LoginPageState();
 }
 
-class LoginPageState extends State<LoginPage>
-    with SingleTickerProviderStateMixin {
-  Color gradientStart = new Color(
-      0xFF9575CD); //Change start gradient color here
+class LoginPageState extends State<LoginPage> with SingleTickerProviderStateMixin {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  ScrollController scrollController = new ScrollController();
+
+  Color gradientStart =
+      new Color(0xFF9575CD); //Change start gradient color here
   Color gradientEnd = new Color(0xFF5E35B1); //Change end gradient color here
   Animation<double> _iconAnimation;
   AnimationController _iconAnimationController;
@@ -41,7 +33,8 @@ class LoginPageState extends State<LoginPage>
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        backgroundColor: Colors.white,
+        resizeToAvoidBottomPadding: true,
+        key: _scaffoldKey,
         body: new Container(
             decoration: new BoxDecoration(
                 gradient: new LinearGradient(
@@ -49,36 +42,35 @@ class LoginPageState extends State<LoginPage>
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     stops: [0.0, 1.0],
-                    tileMode: TileMode.clamp
-                )
-            ),
+                    tileMode: TileMode.clamp)),
             child: new Stack(fit: StackFit.expand, children: <Widget>[
               new Theme(
                 data: new ThemeData(
-                    brightness: Brightness.dark,
+                    primaryColor: Colors.white,
+                    textSelectionColor: Colors.white,
+                    hintColor: Colors.white10,
                     inputDecorationTheme: new InputDecorationTheme(
-                      // hintStyle: new TextStyle(color: Colors.blue, fontSize: 20.0),
+                      hintStyle:
+                          new TextStyle(color: Colors.white, fontSize: 20.0),
                       labelStyle:
-                      new TextStyle(color: Colors.white, fontSize: 20.0),
-                    )
-                ),
+                          new TextStyle(color: Colors.white, fontSize: 20.0),
+                    )),
                 isMaterialAppTheme: true,
                 child: new ListView(
+                  controller: scrollController,
                   children: <Widget>[
                     new AnimatedContainer(
                         duration: const Duration(milliseconds: 300),
-                        padding: const EdgeInsets.only(
-                            top: 150.0, bottom: 70.0),
+                        padding:
+                            const EdgeInsets.only(top: 150.0, bottom: 70.0),
                         child: new Image(
                           image: new AssetImage('assets/logo.webp'),
                           width: _iconAnimation.value * 90.0,
                           height: _iconAnimation.value * 90.0,
-                        )
-                    ),
+                        )),
                     new AnimatedContainer(
                       duration: const Duration(milliseconds: 300),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 500.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 500.0),
                       child: new Form(
                         autovalidate: true,
                         child: new Column(
@@ -86,8 +78,8 @@ class LoginPageState extends State<LoginPage>
                           children: <Widget>[
                             new TextFormField(
                               decoration: new InputDecoration(
-                                  labelText: "Correo",
-                                  fillColor: Colors.white),
+                                labelText: "Correo",
+                              ),
                               keyboardType: TextInputType.emailAddress,
                             ),
                             new TextFormField(
@@ -107,10 +99,13 @@ class LoginPageState extends State<LoginPage>
                                 textColor: Colors.white,
                                 child: new Text("Iniciar Sesion",
                                     style: new TextStyle(fontSize: 20.0)),
-                                onPressed:() => Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (BuildContext context) => new MyTabs())),
+                                onPressed: () => Navigator
+                                    .of(context)
+                                    .pushReplacement(new MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            new MyTabs())),
                               ),
                             )
-
                           ],
                         ),
                       ),
@@ -118,8 +113,6 @@ class LoginPageState extends State<LoginPage>
                   ],
                 ),
               )
-            ])
-        )
-    );
+            ])));
   }
 }
