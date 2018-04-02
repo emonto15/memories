@@ -7,7 +7,8 @@ class LoginPage extends StatefulWidget {
   State createState() => new LoginPageState();
 }
 
-class LoginPageState extends State<LoginPage> with SingleTickerProviderStateMixin {
+class LoginPageState extends State<LoginPage>
+    with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   ScrollController scrollController = new ScrollController();
 
@@ -32,87 +33,102 @@ class LoginPageState extends State<LoginPage> with SingleTickerProviderStateMixi
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-        resizeToAvoidBottomPadding: true,
-        key: _scaffoldKey,
-        body: new Container(
-            decoration: new BoxDecoration(
-                gradient: new LinearGradient(
-                    colors: [gradientStart, gradientEnd],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    stops: [0.0, 1.0],
-                    tileMode: TileMode.clamp)),
-            child: new Stack(fit: StackFit.expand, children: <Widget>[
-              new Theme(
-                data: new ThemeData(
-                    primaryColor: Colors.white,
-                    textSelectionColor: Colors.white,
-                    hintColor: Colors.white10,
-                    inputDecorationTheme: new InputDecorationTheme(
-                      hintStyle:
-                          new TextStyle(color: Colors.white, fontSize: 20.0),
-                      labelStyle:
-                          new TextStyle(color: Colors.white, fontSize: 20.0),
-                    )),
-                isMaterialAppTheme: true,
-                child: new ListView(
-                  controller: scrollController,
-                  children: <Widget>[
-                    new AnimatedContainer(
-                        duration: const Duration(milliseconds: 300),
-                        padding:
-                            const EdgeInsets.only(top: 150.0, bottom: 70.0),
-                        child: new Image(
-                          image: new AssetImage('assets/logo.webp'),
-                          width: _iconAnimation.value * 90.0,
-                          height: _iconAnimation.value * 90.0,
-                        )),
-                    new AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      padding: const EdgeInsets.symmetric(horizontal: 500.0),
-                      child: new Form(
-                        autovalidate: true,
-                        child: new Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
+    return new MediaQuery(
+        data: new MediaQueryData(),
+        child: new Directionality(
+            textDirection: TextDirection.ltr,
+            child: new Scaffold(
+                resizeToAvoidBottomPadding: true,
+                key: _scaffoldKey,
+                body: new Container(
+                    decoration: new BoxDecoration(
+                        gradient: new LinearGradient(
+                            colors: [gradientStart, gradientEnd],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            stops: [0.0, 1.0],
+                            tileMode: TileMode.clamp)),
+                    child: new Stack(fit: StackFit.expand, children: <Widget>[
+                      new Theme(
+                        data: new ThemeData(
+                            primaryColor: Colors.white,
+                            textSelectionColor: Colors.white,
+                            hintColor: Colors.white10,
+                            inputDecorationTheme: new InputDecorationTheme(
+                              hintStyle: new TextStyle(
+                                  color: Colors.white, fontSize: 20.0),
+                              labelStyle: new TextStyle(
+                                  color: Colors.white, fontSize: 20.0),
+                            )),
+                        isMaterialAppTheme: true,
+                        child: new ListView(
+                          controller: scrollController,
                           children: <Widget>[
-                            new TextFormField(
-                              decoration: new InputDecoration(
-                                labelText: "Correo",
-                              ),
-                              keyboardType: TextInputType.emailAddress,
-                            ),
-                            new TextFormField(
-                              decoration: new InputDecoration(
-                                labelText: "Contraseña",
-                              ),
-                              obscureText: true,
-                              keyboardType: TextInputType.text,
-                            ),
-                            new Container(
-                              padding: const EdgeInsets.only(top: 60.0),
-                              child: new MaterialButton(
-                                height: 50.0,
-                                minWidth: 150.0,
-                                color: new Color(0xFF5E35B1),
-                                splashColor: new Color(0xFF9575CD),
-                                textColor: Colors.white,
-                                child: new Text("Iniciar Sesion",
-                                    style: new TextStyle(fontSize: 20.0)),
-                                onPressed: () => Navigator
-                                    .of(context)
-                                    .pushReplacement(new MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            new MyTabs())),
+                            new AnimatedContainer(
+                                duration: const Duration(milliseconds: 300),
+                                padding: const EdgeInsets.only(
+                                    top: 150.0, bottom: 70.0),
+                                child: new Image(
+                                  image: new AssetImage('assets/logo.webp'),
+                                  width: _iconAnimation.value * 90.0,
+                                  height: _iconAnimation.value * 90.0,
+                                )),
+                            new AnimatedContainer(
+                              duration: const Duration(milliseconds: 300),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 500.0),
+                              child: new Form(
+                                autovalidate: true,
+                                child: new Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    new TextFormField(
+                                      decoration: new InputDecoration(
+                                        labelText: "Correo",
+                                      ),
+                                      keyboardType: TextInputType.emailAddress,
+                                    ),
+                                    new TextFormField(
+                                      decoration: new InputDecoration(
+                                        labelText: "Contraseña",
+                                      ),
+                                      obscureText: true,
+                                      keyboardType: TextInputType.text,
+                                    ),
+                                    new Container(
+                                      padding: const EdgeInsets.only(top: 60.0),
+                                      child: new MaterialButton(
+                                        height: 50.0,
+                                        minWidth: 150.0,
+                                        color: new Color(0xFF5E35B1),
+                                        splashColor: new Color(0xFF9575CD),
+                                        textColor: Colors.white,
+                                        child: new Text("Iniciar Sesion",
+                                            style:
+                                                new TextStyle(fontSize: 20.0)),
+                                        onPressed: () => Navigator
+                                            .of(context)
+                                            .pushReplacement(
+                                                new MaterialPageRoute(
+                                                    builder: (BuildContext
+                                                            context) =>
+                                                        new MyTabs())),
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
                             )
                           ],
                         ),
-                      ),
-                    )
-                  ],
-                ),
-              )
-            ])));
+                      )
+                    ])))));
+  }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _iconAnimationController.dispose();
+    super.dispose();
+
   }
 }
