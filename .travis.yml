@@ -12,9 +12,10 @@ addons:
 before_script:
   - git clone https://github.com/flutter/flutter.git -b beta
   - ./flutter/bin/flutter doctor
-  - ./flutter/bin/flutter get packages
+  - ./flutter/bin/flutter packages get
 script:
   - ./flutter/bin/flutter test
 cache:
   directories:
     - $HOME/.pub-cache
+languague: flutter
