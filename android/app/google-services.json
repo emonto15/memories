@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "884230459481",
+    "firebase_url": "https://memories-flutter.firebaseio.com",
+    "project_id": "memories-flutter",
+    "storage_bucket": "memories-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:884230459481:android:4ba9898c5d91a547",
+        "android_client_info": {
+          "package_name": "co.edu.eafit.dis.p2.memories"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "884230459481-7rm8er90k8m2j22ikrt44uepiasngeq4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "co.edu.eafit.dis.p2.memories",
+            "certificate_hash": "a4d06be3f0c11120ef7b9d63a31b147cda29fc1e"
+          }
+        },
+        {
+          "client_id": "884230459481-22ssa8oi5hansa3526jmb6dg6e3rjvrs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1uOK2A2HkACkoPgwAhzEPPghHTglV2pY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "884230459481-22ssa8oi5hansa3526jmb6dg6e3rjvrs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
