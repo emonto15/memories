@@ -1,16 +1,9 @@
 package co.edu.eafit.dis.p2.memories;
 
-import android.content.ContextWrapper;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.os.BatteryManager;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -19,23 +12,19 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.net.URI;
-import java.util.concurrent.ExecutionException;
 
-import cz.msebera.android.httpclient.HttpEntity;
-import cz.msebera.android.httpclient.HttpResponse;
-import cz.msebera.android.httpclient.client.HttpClient;
-import cz.msebera.android.httpclient.client.methods.HttpPost;
-import cz.msebera.android.httpclient.client.utils.URIBuilder;
-import cz.msebera.android.httpclient.entity.ByteArrayEntity;
-import cz.msebera.android.httpclient.impl.client.HttpClients;
-import cz.msebera.android.httpclient.util.EntityUtils;
 import io.flutter.app.FlutterActivity;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugins.GeneratedPluginRegistrant;
+import okhttp3.Call;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 
 public class MainActivity extends FlutterActivity {
@@ -101,16 +90,29 @@ public class MainActivity extends FlutterActivity {
 
         @Override
         protected String doInBackground(Void... params) {
-            HttpClient httpclient = HttpClients.createDefault();
+/*            HttpClient httpclient = HttpClients.createDefault();
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
+            StrictMode.setThreadPolicy(policy);*/
 
 
             try {
-                URIBuilder builder = new URIBuilder("https://eastus.api.cognitive.microsoft.com/face/v1.0/detect?returnFaceId=true&returnFaceLandmarks=false&returnFaceAttributes=emotion");
+                //URIBuilder builder = new URIBuilder("https://eastus.api.cognitive.microsoft.com/face/v1.0/detect?returnFaceId=true&returnFaceLandmarks=false&returnFaceAttributes=emotion");
+                OkHttpClient httpClient = new OkHttpClient();
+                RequestBody requestBody = RequestBody.create(MediaType.parse("application/octet-stream"),new File(path));
 
+                Request request = new Request.Builder()
+                        .url("https://eastus.api.cognitive.microsoft.com/face/v1.0/detect?returnFaceId=true&returnFaceLandmarks=false&returnFaceAttributes=emotion")
+                        .addHeader("Ocp-Apim-Subscription-Key", "0f9ebeaedb9f495c80fde9a845241dc1")
+                        .addHeader("Content-Type","application/octet-stream")
+                        .post(requestBody)
+                        .build();
+                Log.e("Request",request.toString());
+                Call call = httpClient.newCall(request);
+                Response response = call.execute();
+                Log.e("APIII",response.body().string());
+                return response.body().string();
 
-                URI uri = builder.build();
+               /* URI uri = builder.build();
                 HttpPost request = new HttpPost(uri);
                 request.setHeader("Content-Type", "application/octet-stream");
                 request.setHeader("Ocp-Apim-Subscription-Key", "0f9ebeaedb9f495c80fde9a845241dc1");
@@ -123,7 +125,7 @@ public class MainActivity extends FlutterActivity {
                 // getting a response and assigning it to the string res
                 HttpResponse response = httpclient.execute(request);
                 HttpEntity entity = response.getEntity();
-                return EntityUtils.toString(entity);
+                return EntityUtils.toString(entity);*/
 
             } catch (Exception e) {
                 return "null";

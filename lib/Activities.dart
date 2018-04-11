@@ -91,7 +91,7 @@ class QuizPageState extends State<QuizPage> {
       }
     }
     return new Stack(
-      fit: StackFit.expand,
+      fit: StackFit.passthrough,
       children: <Widget>[
         new Column( // This is our main page
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
