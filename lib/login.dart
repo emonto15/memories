@@ -1,5 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'main.dart';
 
 class LoginPage extends StatefulWidget {
@@ -9,6 +11,13 @@ class LoginPage extends StatefulWidget {
 
 class LoginPageState extends State<LoginPage>
     with SingleTickerProviderStateMixin {
+
+  GoogleSignIn _googleSignIn = new GoogleSignIn(
+    scopes: [
+      'email',
+    ],
+  );
+
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   ScrollController scrollController = new ScrollController();
 
@@ -82,37 +91,29 @@ class LoginPageState extends State<LoginPage>
                                 child: new Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: <Widget>[
-                                    new TextFormField(
-                                      decoration: new InputDecoration(
-                                        labelText: "Correo",
-                                      ),
-                                      keyboardType: TextInputType.emailAddress,
-                                    ),
-                                    new TextFormField(
-                                      decoration: new InputDecoration(
-                                        labelText: "Contraseña",
-                                      ),
-                                      obscureText: true,
-                                      keyboardType: TextInputType.text,
-                                    ),
+
                                     new Container(
                                       padding: const EdgeInsets.only(top: 60.0),
                                       child: new MaterialButton(
                                         height: 50.0,
                                         minWidth: 150.0,
-                                        color: new Color(0xFF5E35B1),
-                                        splashColor: new Color(0xFF9575CD),
+                                        color: gradientEnd,
+                                        splashColor: gradientStart,
                                         textColor: Colors.white,
-                                        child: new Text("Iniciar Sesion",
-                                            style:
-                                                new TextStyle(fontSize: 20.0)),
-                                        onPressed: () => Navigator
-                                            .of(context)
-                                            .pushReplacement(
-                                                new MaterialPageRoute(
-                                                    builder: (BuildContext
-                                                            context) =>
-                                                        new MyTabs())),
+                                        child: new Center(
+                                            child: new Row(children: <Widget>[
+                                          new Container(
+                                              width: 60.0,
+                                              child: new Image(
+                                                  image: new AssetImage(
+                                                      'assets/google-logo.webp'),
+                                                  width: 25.0,
+                                                  height: 25.0)),
+                                          new Text("Iniciar Sesion",
+                                              style: new TextStyle(
+                                                  fontSize: 20.0)),
+                                        ])),
+                                        onPressed: () => _handleSignIn(),
                                       ),
                                     )
                                   ],
@@ -124,11 +125,26 @@ class LoginPageState extends State<LoginPage>
                       )
                     ])))));
   }
+
+  Future<Null> _handleSignIn() async {
+    try{
+      await _googleSignIn.signIn();
+      Navigator
+          .of(context)
+          .pushReplacement(
+          new MaterialPageRoute(
+              builder: (BuildContext
+              context) =>
+              new MyTabs()));
+
+    }catch(err){
+      print(err);
+    }
+  }
+
   @override
   void dispose() {
-    // TODO: implement dispose
     _iconAnimationController.dispose();
     super.dispose();
-
   }
 }
