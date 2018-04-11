@@ -37,12 +37,15 @@ class QuizPageState extends State<QuizPage> {
 
   Question currentQuestion;
   Quiz quiz = new Quiz([
-    new Question("Venus es un:", ["Planeta","Animal","Vegetal","Objeto"],"Planeta"),
-    new Question("El cuarto día de la semana es:",["Lunes","Viernes","Jueves","Sábado"],"Jueves"),
-    new Question("La madre de su madre es su:", ["Tia","Hermana","Madre","Abuela"],"Abuela")
+    new Question("¿Qué animal es este?", ["Cebra","Caballo","Unicornio","Burro"],"Cebra",true,"assets/zebra256.webp"),
+    new Question("Venus es un:", ["Planeta","Animal","Vegetal","Objeto"],"Planeta",false,""),
+    new Question("El cuarto día de la semana es:",["Lunes","Viernes","Jueves","Sábado"],"Jueves",false,""),
+    new Question("La madre de su madre es su:", ["Tia","Hermana","Madre","Abuela"],"Abuela",false,"")
   ]);
   String questionText;
   int questionNumber;
+  bool hasImage;
+  String questionImagePath;
   bool isCorrect;
   bool overlayShouldBeVisible = false;
   var stopwatch = clock.getStopwatch();
@@ -63,6 +66,8 @@ class QuizPageState extends State<QuizPage> {
     currentQuestion = quiz.nextQuestion;
     questionText = currentQuestion.question;
     questionNumber = quiz.questionNumber;
+    hasImage = currentQuestion.hasImage;
+    questionImagePath = currentQuestion.imageRoute;
     stopwatch.start();
   }
 
@@ -86,12 +91,13 @@ class QuizPageState extends State<QuizPage> {
       }
     }
     return new Stack(
-      fit: StackFit.expand,
+      fit: StackFit.passthrough,
       children: <Widget>[
         new Column( // This is our main page
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            new QuestionText(questionText, questionNumber),
+            new QuestionText(questionText, questionNumber, hasImage, questionImagePath)
+            ,
             new Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
@@ -122,6 +128,8 @@ class QuizPageState extends State<QuizPage> {
                 overlayShouldBeVisible = false;
                 questionText = currentQuestion.question;
                 questionNumber = quiz.questionNumber;
+                hasImage = currentQuestion.hasImage;
+                questionImagePath = currentQuestion.imageRoute;
               });
             }
         ) : new Container()
