@@ -39,7 +39,7 @@ public class MainActivity extends FlutterActivity {
                     @Override
                     public void onMethodCall(MethodCall call, Result result) {
                         if (call.method.equals("sendEmotion")) {
-                            sendEmotion((String)call.argument("path"));
+                            sendEmotion((String) call.argument("path"));
                             result.success("success");
 
                         } else {
@@ -56,8 +56,7 @@ public class MainActivity extends FlutterActivity {
     public static byte[] toBase64(String filePath) {
 
         File imgFile = new File(filePath);
-        if(imgFile.exists())
-        {
+        if (imgFile.exists()) {
             Bitmap bm = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
@@ -98,18 +97,18 @@ public class MainActivity extends FlutterActivity {
             try {
                 //URIBuilder builder = new URIBuilder("https://eastus.api.cognitive.microsoft.com/face/v1.0/detect?returnFaceId=true&returnFaceLandmarks=false&returnFaceAttributes=emotion");
                 OkHttpClient httpClient = new OkHttpClient();
-                RequestBody requestBody = RequestBody.create(MediaType.parse("application/octet-stream"),new File(path));
+                RequestBody requestBody = RequestBody.create(MediaType.parse("application/octet-stream"), new File(path));
 
                 Request request = new Request.Builder()
                         .url("https://eastus.api.cognitive.microsoft.com/face/v1.0/detect?returnFaceId=true&returnFaceLandmarks=false&returnFaceAttributes=emotion")
                         .addHeader("Ocp-Apim-Subscription-Key", "0f9ebeaedb9f495c80fde9a845241dc1")
-                        .addHeader("Content-Type","application/octet-stream")
+                        .addHeader("Content-Type", "application/octet-stream")
                         .post(requestBody)
                         .build();
-                Log.e("Request",request.toString());
+                Log.e("Request", request.toString());
                 Call call = httpClient.newCall(request);
                 Response response = call.execute();
-                Log.e("APIII",response.body().string());
+                Log.e("APIII", response.body().string());
                 return response.body().string();
 
                /* URI uri = builder.build();
@@ -136,15 +135,13 @@ public class MainActivity extends FlutterActivity {
         @Override
         protected void onPostExecute(String result) {
 
-            Log.d("res post", result);
-
             JSONArray jsonArray = null;
             try {
                 // convert the string to JSONArray
                 jsonArray = new JSONArray(result);
                 String emotions = "";
                 // get the scores object from the results
-                for (int i = 0; i < jsonArray.length(); i++) {
+                for (int i = 0; i < jsonArray.length() - 1; i++) {
                     JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
                     JSONObject scores = jsonObject.getJSONObject("scores");
                     double max = 0;
@@ -161,11 +158,7 @@ public class MainActivity extends FlutterActivity {
 
 
             } catch (JSONException e) {
-                if (result.contains("anger")) {
-                    //nothing wrong.
-                } else {
-                    Log.d("Face api error:", e.getMessage());
-                }
+
             }
 
         }

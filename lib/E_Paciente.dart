@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:memories/E_Informante.dart' as informante;
 
 class ExamenPaciente extends StatefulWidget {
 
@@ -108,6 +109,11 @@ class _ExamenPaciente extends State<ExamenPaciente> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      appBar: new AppBar(
+          title: new Center(child: new Text("Paciente")),
+          backgroundColor: new Color(0xFF7E57C2),
+          automaticallyImplyLeading: false,
+      ),
       key: _scaffoldKey,
       body: new DropdownButtonHideUnderline(
         child: new SafeArea(
@@ -462,7 +468,7 @@ class _ExamenPaciente extends State<ExamenPaciente> {
   }
 
   void _handleSubmitted() {
-    showInSnackBar('Se han enviado los datos correctamente.');
+    Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => informante.ExamenInformante()));
   }
 }
 

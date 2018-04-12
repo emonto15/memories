@@ -16,18 +16,20 @@ import './UI/correct_wrong_overlay.dart';
 
 import './Score_page.dart';
 
-
-
 class QuizPage extends StatefulWidget {
   final List<CameraDescription> cameras;
-  QuizPage ({this.cameras});
+
+  QuizPage({this.cameras});
+
   @override
   State createState() => new QuizPageState(cameras: cameras);
 }
 
 class QuizPageState extends State<QuizPage> {
   final List<CameraDescription> cameras;
+
   QuizPageState({this.cameras});
+
   CameraDescription cameraD;
   static const platform = const MethodChannel('samples.flutter.io/battery');
   bool opening = false;
@@ -37,10 +39,18 @@ class QuizPageState extends State<QuizPage> {
 
   Question currentQuestion;
   Quiz quiz = new Quiz([
-    new Question("¿Qué animal es este?", ["Cebra","Caballo","Unicornio","Burro"],"Cebra",true,"assets/zebra256.webp"),
-    new Question("Venus es un:", ["Planeta","Animal","Vegetal","Objeto"],"Planeta",false,""),
-    new Question("El cuarto día de la semana es:",["Lunes","Viernes","Jueves","Sábado"],"Jueves",false,""),
-    new Question("La madre de su madre es su:", ["Tia","Hermana","Madre","Abuela"],"Abuela",false,"")
+    new Question(
+        "¿Qué animal es este?",
+        ["Cebra", "Caballo", "Unicornio", "Burro"],
+        "Cebra",
+        true,
+        "assets/zebra256.webp"),
+    new Question("Venus es un:", ["Planeta", "Animal", "Vegetal", "Objeto"],
+        "Planeta", false, ""),
+    new Question("El cuarto día de la semana es:",
+        ["Lunes", "Viernes", "Jueves", "Sábado"], "Jueves", false, ""),
+    new Question("La madre de su madre es su:",
+        ["Tia", "Hermana", "Madre", "Abuela"], "Abuela", false, "")
   ]);
   String questionText;
   int questionNumber;
@@ -50,15 +60,14 @@ class QuizPageState extends State<QuizPage> {
   bool overlayShouldBeVisible = false;
   var stopwatch = clock.getStopwatch();
 
-
   Future<Null> _sendEmotion(String path) async {
     try {
-      await platform.invokeMethod('sendEmotion',<String, dynamic>{"path":path});
+      await platform
+          .invokeMethod('sendEmotion', <String, dynamic>{"path": path});
     } on PlatformException catch (e) {
       print("Failed to send emotion: '${e.message}'.");
     }
   }
-
 
   @override
   void initState() {
@@ -77,7 +86,7 @@ class QuizPageState extends State<QuizPage> {
     quiz.answer(isCorrect);
     this.setState(() {
       stopwatch.stop();
-      print((stopwatch.elapsedMilliseconds/1000).toString() + "seconds");
+      print((stopwatch.elapsedMilliseconds / 1000).toString() + "seconds");
       stopwatch.reset();
       overlayShouldBeVisible = true;
     });
@@ -86,53 +95,66 @@ class QuizPageState extends State<QuizPage> {
   @override
   Widget build(BuildContext context) {
     for (CameraDescription cameraDescription in this.cameras) {
-      if(cameraDescription.lensDirection == CameraLensDirection.front){
+      if (cameraDescription.lensDirection == CameraLensDirection.front) {
         cameraD = cameraDescription;
       }
     }
     return new Stack(
       fit: StackFit.passthrough,
       children: <Widget>[
-        new Column( // This is our main page
+        new Column(
+          // This is our main page
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            new QuestionText(questionText, questionNumber, hasImage, questionImagePath)
-            ,
+            new QuestionText(
+                questionText, questionNumber, hasImage, questionImagePath),
             new Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      new Row(children: <Widget>[
-                        new AnswerButton(currentQuestion.options[0],currentQuestion.answer, () => handleAnswer(currentQuestion.options[0])),
-                        new AnswerButton(currentQuestion.options[1],currentQuestion.answer, () => handleAnswer(currentQuestion.options[1])),
-                      ]
-                      ),
-                      new Row(children: <Widget>[
-                        new AnswerButton(currentQuestion.options[2],currentQuestion.answer, () => handleAnswer(currentQuestion.options[2])),
-                        new AnswerButton(currentQuestion.options[3],currentQuestion.answer, () => handleAnswer(currentQuestion.options[3]))
-                      ]
-                      )
-                    ]
-            )
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  new Row(children: <Widget>[
+                    new AnswerButton(
+                        currentQuestion.options[0],
+                        currentQuestion.answer,
+                        () => handleAnswer(currentQuestion.options[0])),
+                    new AnswerButton(
+                        currentQuestion.options[1],
+                        currentQuestion.answer,
+                        () => handleAnswer(currentQuestion.options[1])),
+                  ]),
+                  new Row(children: <Widget>[
+                    new AnswerButton(
+                        currentQuestion.options[2],
+                        currentQuestion.answer,
+                        () => handleAnswer(currentQuestion.options[2])),
+                    new AnswerButton(
+                        currentQuestion.options[3],
+                        currentQuestion.answer,
+                        () => handleAnswer(currentQuestion.options[3]))
+                  ])
+                ])
           ],
         ),
-        overlayShouldBeVisible == true ? new CorrectWrongOverlay(
-            isCorrect,
-                () {
-              if (quiz.length == questionNumber) {
-                Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(builder: (BuildContext context) => new ScorePage(quiz.score, quiz.length)), (Route route) => route == null);
-                return;
-              }
-              currentQuestion = quiz.nextQuestion;
-              this.setState(() {
-                stopwatch.start();
-                overlayShouldBeVisible = false;
-                questionText = currentQuestion.question;
-                questionNumber = quiz.questionNumber;
-                hasImage = currentQuestion.hasImage;
-                questionImagePath = currentQuestion.imageRoute;
-              });
-            }
-        ) : new Container()
+        overlayShouldBeVisible == true
+            ? new CorrectWrongOverlay(isCorrect, () {
+                if (quiz.length == questionNumber) {
+                  Navigator.of(context).pushAndRemoveUntil(
+                      new MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              new ScorePage(quiz.score, quiz.length)),
+                      (Route route) => route == null);
+                  return;
+                }
+                currentQuestion = quiz.nextQuestion;
+                this.setState(() {
+                  stopwatch.start();
+                  overlayShouldBeVisible = false;
+                  questionText = currentQuestion.question;
+                  questionNumber = quiz.questionNumber;
+                  hasImage = currentQuestion.hasImage;
+                  questionImagePath = currentQuestion.imageRoute;
+                });
+              })
+            : new Container()
       ],
     );
   }
@@ -141,8 +163,7 @@ class QuizPageState extends State<QuizPage> {
     final CameraController tempController = controller;
     controller = null;
     await tempController?.dispose();
-    controller =
-    new CameraController(cameraD, ResolutionPreset.high);
+    controller = new CameraController(cameraD, ResolutionPreset.high);
     await controller.initialize();
     setState(() {});
     if (controller.value.hasError) {
@@ -160,11 +181,17 @@ class QuizPageState extends State<QuizPage> {
         return;
       }
       setState(
-            () {
+        () {
           imagePath = path;
           _sendEmotion(path);
         },
       );
     }
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 }

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import './Perfil.dart' as perfil;
-import './Examen.dart' as examen;
-import './Reportes.dart' as reportes;
-import './Landing_page.dart' as landingActivities;
+import 'package:memories/Perfil.dart' as perfil;
+import 'package:memories/Examen_Landing_page.dart' as examen;
+import 'package:memories/Reportes.dart' as reportes;
+import 'package:memories/Activities_Landing_page.dart' as landingActivities;
 import 'dart:async';
 import 'package:camera/camera.dart';
-import 'login.dart';
+import 'package:memories/login.dart';
 List<CameraDescription> cameras;
 Future<Null> main() async {
   cameras = await availableCameras();
@@ -51,6 +51,7 @@ class MyTabsState extends State<MyTabs> with SingleTickerProviderStateMixin {
             title: new Center(child: new Text("Memories")),
             backgroundColor: new Color(0xFF7E57C2),
             bottom: new TabBar(
+              indicatorColor: Colors.white,
               controller: controller,
               tabs: <Tab>[
                 new Tab(child: new Text("Perfil", style: new TextStyle(fontSize: 18.0))),
@@ -67,7 +68,7 @@ class MyTabsState extends State<MyTabs> with SingleTickerProviderStateMixin {
             controller: controller,
             children: <Widget>[
               new perfil.Perfil(),
-              new examen.MyTabsTwo(),
+              new examen.LandingPage(),
               new landingActivities.LandingPage(cameras: cameras),
               new reportes.Report(),
               new reportes.Report()

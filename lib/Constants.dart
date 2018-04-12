@@ -1,1 +1,1 @@
-final String URL="http://10.106.19.201:3000";
+final String URL="http://192.168.1.70:3000";

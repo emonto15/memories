@@ -1,8 +1,10 @@
 import 'dart:async';
-
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'main.dart';
+import 'package:memories/main.dart';
+import 'package:memories/Constants.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -11,7 +13,7 @@ class LoginPage extends StatefulWidget {
 
 class LoginPageState extends State<LoginPage>
     with SingleTickerProviderStateMixin {
-
+  var httpClient = new HttpClient();
   GoogleSignIn _googleSignIn = new GoogleSignIn(
     scopes: [
       'email',
@@ -63,6 +65,7 @@ class LoginPageState extends State<LoginPage>
                             primaryColor: Colors.white,
                             textSelectionColor: Colors.white,
                             hintColor: Colors.white10,
+                            accentColor: Colors.white,
                             inputDecorationTheme: new InputDecorationTheme(
                               hintStyle: new TextStyle(
                                   color: Colors.white, fontSize: 20.0),
@@ -91,7 +94,6 @@ class LoginPageState extends State<LoginPage>
                                 child: new Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: <Widget>[
-
                                     new Container(
                                       padding: const EdgeInsets.only(top: 60.0),
                                       child: new MaterialButton(
@@ -127,17 +129,24 @@ class LoginPageState extends State<LoginPage>
   }
 
   Future<Null> _handleSignIn() async {
-    try{
+    try {
       await _googleSignIn.signIn();
-      Navigator
-          .of(context)
-          .pushReplacement(
-          new MaterialPageRoute(
-              builder: (BuildContext
-              context) =>
-              new MyTabs()));
+     var  currentUser = new Map();
+      currentUser["google_id"] = _googleSignIn.currentUser.id;
 
-    }catch(err){
+      final String requestBody = json.encode(currentUser);
+      print(requestBody);
+      HttpClientRequest request = await httpClient.postUrl(Uri.parse(URL+'/users/login'))
+        ..headers.add(HttpHeaders.ACCEPT, ContentType.JSON)
+        ..headers.contentType = ContentType.JSON
+        ..headers.contentLength = requestBody.length
+        ..headers.chunkedTransferEncoding = false;
+      request.write(requestBody);
+      HttpClientResponse response = await request.close();
+      print(json.decode(await response.transform(utf8.decoder).join())['registrado']);
+      Navigator.of(context).pushReplacement(new MaterialPageRoute(
+          builder: (BuildContext context) => new MyTabs()));
+    } catch (err) {
       print(err);
     }
   }

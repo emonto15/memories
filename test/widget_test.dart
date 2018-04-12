@@ -1,7 +1,4 @@
-<<<<<<< HEAD
 import 'dart:io';
-=======
->>>>>>> Examenes
 
 // This is a basic Flutter widget test.
 // To perform an interaction with a widget in your test, use the WidgetTester utility that Flutter
@@ -21,10 +18,7 @@ void main() {
         builder: (BuildContext context, StateSetter setState) {
       return new LoginPage();
     }));
-<<<<<<< HEAD
     sleep(const Duration(seconds:5));
-=======
->>>>>>> Examenes
 
   });
 }
