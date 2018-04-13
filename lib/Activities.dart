@@ -18,7 +18,6 @@ import './Score_page.dart';
 
 class QuizPage extends StatefulWidget {
   final List<CameraDescription> cameras;
-
   QuizPage({this.cameras});
 
   @override

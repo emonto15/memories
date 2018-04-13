@@ -1,16 +1,19 @@
+import 'dart:async';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:camera/camera.dart';
 import './Activities.dart';
 
 class LandingPage extends StatelessWidget {
-  final List<CameraDescription> cameras;
-  LandingPage({this.cameras});
+  List<CameraDescription> cameras;
+  LandingPage();
   @override
   Widget build(BuildContext context) {
     return new Material(
       color: Colors.white,
       child: new InkWell(
-        onTap: () => Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new QuizPage(cameras: cameras))),
+        onTap: () => _handleTap(context),
         child: new Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -20,5 +23,10 @@ class LandingPage extends StatelessWidget {
         ),
       ),
     );
+  }
+  
+  Future<Null> _handleTap(context) async {
+     cameras = await availableCameras();
+    Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new QuizPage(cameras: cameras)));
   }
 }

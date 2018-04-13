@@ -4,11 +4,8 @@ import 'package:memories/Examen_Landing_page.dart' as examen;
 import 'package:memories/Reportes.dart' as reportes;
 import 'package:memories/Activities_Landing_page.dart' as landingActivities;
 import 'dart:async';
-import 'package:camera/camera.dart';
 import 'package:memories/login.dart';
-List<CameraDescription> cameras;
 Future<Null> main() async {
-  cameras = await availableCameras();
   if(true == true){
     runApp(new MaterialApp(
         home: new LoginPage()
@@ -69,7 +66,7 @@ class MyTabsState extends State<MyTabs> with SingleTickerProviderStateMixin {
             children: <Widget>[
               new perfil.Perfil(),
               new examen.LandingPage(),
-              new landingActivities.LandingPage(cameras: cameras),
+              new landingActivities.LandingPage(),
               new reportes.Report(),
               new reportes.Report()
             ]
