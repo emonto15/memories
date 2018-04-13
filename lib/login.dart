@@ -44,6 +44,8 @@ class LoginPageState extends State<LoginPage>
 
   @override
   Widget build(BuildContext context) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeigth = MediaQuery.of(context).size.height;
     return new MediaQuery(
         data: new MediaQueryData(),
         child: new Directionality(
@@ -86,42 +88,45 @@ class LoginPageState extends State<LoginPage>
                                   height: _iconAnimation.value * 90.0,
                                 )),
                             new AnimatedContainer(
-                              duration: const Duration(milliseconds: 300),
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 500.0),
-                              child: new Form(
-                                autovalidate: true,
-                                child: new Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: <Widget>[
-                                    new Container(
-                                      padding: const EdgeInsets.only(top: 60.0),
-                                      child: new MaterialButton(
-                                        height: 50.0,
-                                        minWidth: 150.0,
-                                        color: gradientEnd,
-                                        splashColor: gradientStart,
-                                        textColor: Colors.white,
-                                        child: new Center(
-                                            child: new Row(children: <Widget>[
-                                          new Container(
-                                              width: 60.0,
-                                              child: new Image(
-                                                  image: new AssetImage(
-                                                      'assets/google-logo.webp'),
-                                                  width: 25.0,
-                                                  height: 25.0)),
-                                          new Text("Iniciar Sesion",
-                                              style: new TextStyle(
-                                                  fontSize: 20.0)),
-                                        ])),
-                                        onPressed: () => _handleSignIn(),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            )
+                                duration: const Duration(milliseconds: 300),
+                                //padding: const EdgeInsets.symmetric(horizontal: 500.0),
+                                child: new Center(
+                                  child: new Form(
+                                    autovalidate: true,
+                                    child: new Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: <Widget>[
+                                        new Container(
+                                          width: screenWidth * 0.2,
+                                          padding: new EdgeInsets.only(top: screenHeigth * 0.08),
+                                          child: new MaterialButton(
+                                            height: 50.0,
+                                            minWidth: 150.0,
+                                            color: gradientEnd,
+                                            splashColor: gradientStart,
+                                            textColor: Colors.white,
+                                            child: new Center(
+                                                child:
+                                                    new Row(children: <Widget>[
+                                              new Container(
+                                                  width: 60.0,
+                                                  child: new Image(
+                                                      image: new AssetImage(
+                                                          'assets/google-logo.webp'),
+                                                      width: 25.0,
+                                                      height: 25.0)),
+                                              new Text("Iniciar Sesion",
+                                                  style: new TextStyle(
+                                                      fontSize: 20.0)),
+                                            ])),
+                                            onPressed: () => _handleSignIn(),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ))
                           ],
                         ),
                       )
@@ -131,19 +136,21 @@ class LoginPageState extends State<LoginPage>
   Future<Null> _handleSignIn() async {
     try {
       await _googleSignIn.signIn();
-     var  currentUser = new Map();
+      var currentUser = new Map();
       currentUser["google_id"] = _googleSignIn.currentUser.id;
 
       final String requestBody = json.encode(currentUser);
       print(requestBody);
-      HttpClientRequest request = await httpClient.postUrl(Uri.parse(URL+'/users/login'))
-        ..headers.add(HttpHeaders.ACCEPT, ContentType.JSON)
-        ..headers.contentType = ContentType.JSON
-        ..headers.contentLength = requestBody.length
-        ..headers.chunkedTransferEncoding = false;
+      HttpClientRequest request =
+          await httpClient.postUrl(Uri.parse(URL + '/users/login'))
+            ..headers.add(HttpHeaders.ACCEPT, ContentType.JSON)
+            ..headers.contentType = ContentType.JSON
+            ..headers.contentLength = requestBody.length
+            ..headers.chunkedTransferEncoding = false;
       request.write(requestBody);
       HttpClientResponse response = await request.close();
-      print(json.decode(await response.transform(utf8.decoder).join())['registrado']);
+      print(json
+          .decode(await response.transform(utf8.decoder).join())['registrado']);
       Navigator.of(context).pushReplacement(new MaterialPageRoute(
           builder: (BuildContext context) => new MyTabs()));
     } catch (err) {
