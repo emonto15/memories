@@ -102,7 +102,7 @@ class LoginPageState extends State<LoginPage>
                                           padding: new EdgeInsets.only(top: screenHeigth * 0.08),
                                           child: new MaterialButton(
                                             height: 50.0,
-                                            minWidth: 150.0,
+                                            minWidth: screenWidth * 0.2,
                                             color: gradientEnd,
                                             splashColor: gradientStart,
                                             textColor: Colors.white,
@@ -110,7 +110,7 @@ class LoginPageState extends State<LoginPage>
                                                 child:
                                                     new Row(children: <Widget>[
                                               new Container(
-                                                  width: 60.0,
+                                                  width: screenWidth * 0.04,
                                                   child: new Image(
                                                       image: new AssetImage(
                                                           'assets/google-logo.webp'),
