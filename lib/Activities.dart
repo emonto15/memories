@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:clock/clock.dart' as clock;
+import 'package:memories/tts.dart';
 
 import './utils/question.dart';
 import './utils/quiz.dart';
@@ -18,6 +19,7 @@ import './Score_page.dart';
 
 class QuizPage extends StatefulWidget {
   final List<CameraDescription> cameras;
+
   QuizPage({this.cameras});
 
   @override
@@ -30,7 +32,7 @@ class QuizPageState extends State<QuizPage> {
   QuizPageState({this.cameras});
 
   CameraDescription cameraD;
-  static const platform = const MethodChannel('samples.flutter.io/battery');
+  static const platform = const MethodChannel('co.edu.eafit.dis.p2.memories');
   bool opening = false;
   CameraController controller;
   String imagePath;
@@ -98,7 +100,7 @@ class QuizPageState extends State<QuizPage> {
         cameraD = cameraDescription;
       }
     }
-    return new Stack(
+    var a = new Stack(
       fit: StackFit.passthrough,
       children: <Widget>[
         new Column(
@@ -156,6 +158,7 @@ class QuizPageState extends State<QuizPage> {
             : new Container()
       ],
     );
+    return a;
   }
 
   Future<Null> capture() async {

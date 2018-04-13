@@ -5,6 +5,8 @@ import 'package:memories/Reportes.dart' as reportes;
 import 'package:memories/Activities_Landing_page.dart' as landingActivities;
 import 'dart:async';
 import 'package:memories/login.dart';
+import 'package:memories/tts.dart';
+
 Future<Null> main() async {
   if(true == true){
     runApp(new MaterialApp(
