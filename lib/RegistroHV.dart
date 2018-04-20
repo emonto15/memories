@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import './utils/personModel.dart';
+import 'package:memories/main.dart';
 
 class RegistroHV extends StatefulWidget {
   @override
@@ -24,20 +26,41 @@ String estadoCivil;
 String pasatiempo;
 String generoMusical;
 String lugarResidencia="";
+String parentesco;
+String nombreFamiliar ="";
+
+
+
+
+
+
+
+final List<String> _parentesco = <String>['Padre','Madre','Hijo'];
+
 
 class _RegistroHVState extends State<RegistroHV> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final TextEditingController _controller = new TextEditingController();
+  List<personModel> person =[];
+  List<Widget> labelList = [];
 
+  void initState() {
+    super.initState();
+    _buildLabels(null);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
+
       appBar: new AppBar(
         title: new Center(child: new Text("Datos personales")),
         backgroundColor: new Color(0xFF7E57C2),
           automaticallyImplyLeading: false),
       body: new DropdownButtonHideUnderline(
+
         child: new Container(
+
           padding: new EdgeInsets.all(35.0),
           child: new ListView(
             children: <Widget>[
@@ -324,11 +347,148 @@ class _RegistroHVState extends State<RegistroHV> {
                           child: new Text(value),
                         );
                       }).toList())),
+              new Container(
+                padding: new EdgeInsets.only(top: 40.0),
+                child: new Row(
+                    children: [
+                      new Expanded(
+                          child:  new Container(
+                              padding: new EdgeInsets.only(top: 20.0),
+                              child: new Text("Nombre:",
+                                style: new TextStyle(fontSize: 18.0),)
+                          )),
+                      new Expanded(
+                          child:  new TextField(
+                              controller: _controller,
+                              onChanged: (String str) {
+                                setState(() {
+                                  nombreFamiliar = str;
+                                });
+                              }
+                          )),
+                      new Expanded(
+                          child: new Text("Parentesco:",
+                            style: new TextStyle(fontSize: 18.0),
+                          )),
+                      new Expanded(
+                          child:  new InputDecorator(
+                              decoration: const InputDecoration(
+                                hintText: '',
+                              ),
+                              isEmpty: parentesco == null,
+                              child: new DropdownButton<String>(
+                                  value: parentesco,
+                                  isDense: true,
+                                  onChanged: (String newValue) {
+                                    setState(() {
+                                      parentesco = newValue;
+                                    });
+                                  },
+                                  items: _parentesco.map((String value) {
+                                    return new DropdownMenuItem<String>(
+                                      value: value,
+                                      child: new Text(value),
+                                    );
+                                  }).toList()))),
+                      new Expanded(
+                          child: new IconButton(
+                              icon: const Icon(Icons.add),
+                              color: Colors.green,
+                              onPressed: _addPerson
+                          ))
+
+                    ] ),
+              ),
+              new Container(
+                padding: new EdgeInsets.only(bottom:100.0),
+                child: new Column(
+                    children: labelList
+                ),
+              ),
+              new Container(
+                  padding: new EdgeInsets.all(20.0), child: new Center(
+                child: new RaisedButton(
+                  color: new Color(0xFF7E57C2),
+                  child: new Text('Enviar', style: new TextStyle(
+                      color: Colors.white, fontSize: 18.0)),
+                  onPressed: _handleSubmitted,
+                ),
+              )
+              )
+
             ],
           ),
         ),
       ),
     );
+  }
+
+  List<Widget> _buildLabels(int editIndex) {
+    labelList = [];
+
+
+    for (int index = 0; index < person.length;index++){
+      labelList.add(
+          new Row(children: [
+            new Expanded(
+                child: new Text(person[index].nombre,
+                  style: new TextStyle(fontSize: 18.0),
+                  textAlign: TextAlign.left,
+                )
+            ),
+            new Expanded(
+                child: new Text(person[index].parentesco,
+                  style: new TextStyle(fontSize: 18.0),
+                  textAlign: TextAlign.center,
+                )),
+            new Expanded(
+                child: new IconButton(
+                    icon: const Icon(Icons.delete),
+                    color: Colors.green,
+                    onPressed: () => _removePersonAt(index)
+                )),
+
+          ])
+      );
+    }
+
+
+    return labelList;
+  }
+
+  _handleSubmitted(){
+    Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => MyTabs()));
+  }
+  _addPerson(){
+    setState(() {
+      if(_controller.text.isNotEmpty && parentesco!=null) {
+        person.add(new personModel(nombreFamiliar, parentesco));
+        _buildLabels(null);
+        _controller.clear();
+      }else{
+        _scaffoldKey.currentState.showSnackBar(
+            new SnackBar(
+              content: new Text('Nombre o parentesco vacio'),
+            )
+        );
+      }
+
+    });
+  }
+
+  _removePersonAt(int index) {
+    setState((){
+      if(person.length >= 1) {
+        person.removeAt(index);
+        _buildLabels(null);
+      } else {
+        _scaffoldKey.currentState.showSnackBar(
+            new SnackBar(
+              content: new Text('No se pudo eliminar'),
+            )
+        );
+      }
+    });
   }
 
 }
