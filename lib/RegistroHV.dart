@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import './utils/personModel.dart';
 import 'package:memories/main.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+import 'package:memories/Constants.dart';
 
 class RegistroHV extends StatefulWidget {
   @override
@@ -12,6 +16,9 @@ final List<String> _escolaridad = <String>['Primaria', 'Bachillerato','Pre-grado
 final List<String> _estadoCivil = <String>['Soltero', 'Casado','Divorciado', 'Viudo'];
 final List<String> _pasatiempo = <String>['Deportes', 'Dibujar','Bailar', 'Pintar','leer','Escuchar Musica','Ver televisión'];
 final List<String> _generoMusical = <String>['Música clásica', 'Blues','Jazz', 'Rock and Roll','Soul','Rock','Pop','Electronica','Salsa'];
+final List<String> _capacidadFisica = <String>['Excelente', 'Mas o menos', 'Mala'];
+final List<String> _capacidadCaminar = <String>['Con normalidad', 'Con dificultad', 'No es capaz'];
+
 
 String nombre = "";
 String edad = "";
@@ -28,6 +35,10 @@ String generoMusical;
 String lugarResidencia="";
 String parentesco;
 String nombreFamiliar ="";
+String capacidadFisica;
+String capacidadCaminar;
+String fechaNacimiento = "";
+String fechaMatrimonio = "";
 
 
 
@@ -39,6 +50,7 @@ final List<String> _parentesco = <String>['Padre','Madre','Hijo'];
 
 
 class _RegistroHVState extends State<RegistroHV> {
+  var httpClient = new HttpClient();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final TextEditingController _controller = new TextEditingController();
   List<personModel> person =[];
@@ -194,7 +206,7 @@ class _RegistroHVState extends State<RegistroHV> {
                   ),
                   onChanged: (String str) {
                     setState(() {
-                      paisNacimiento = str;
+                      fechaNacimiento = str;
                     });
                   }
               ),
@@ -292,7 +304,7 @@ class _RegistroHVState extends State<RegistroHV> {
                   ),
                   onChanged: (String str) {
                     setState(() {
-                      colegio = str;
+                      fechaMatrimonio = str;
                     });
                   }
               ),
@@ -347,6 +359,61 @@ class _RegistroHVState extends State<RegistroHV> {
                           child: new Text(value),
                         );
                       }).toList())),
+
+              new Container(
+                  padding: new EdgeInsets.only(top: 20.0),
+                  child: new Text(
+                      "16. Capacidad Fisica",
+                      style: new TextStyle(fontSize: 18.0))),
+              new InputDecorator(
+                  decoration: const InputDecoration(
+                    labelText: 'Respuesta:',
+                    hintText: '',
+                  ),
+                  isEmpty: capacidadFisica == null,
+                  child: new DropdownButton<String>(
+                      value: capacidadFisica,
+                      isDense: true,
+                      onChanged: (String newValue) {
+                        setState(() {
+                          capacidadFisica = newValue;
+                        });
+                      },
+                      items: _capacidadFisica.map((String value) {
+                        return new DropdownMenuItem<String>(
+                          value: value,
+                          child: new Text(value),
+                        );
+                      }).toList())),
+
+              new Container(
+                  padding: new EdgeInsets.only(top: 20.0),
+                  child: new Text(
+                      "17. Capacidad para caminar",
+                      style: new TextStyle(fontSize: 18.0))),
+              new InputDecorator(
+                  decoration: const InputDecoration(
+                    labelText: 'Respuesta:',
+                    hintText: '',
+                  ),
+                  isEmpty: capacidadCaminar == null,
+                  child: new DropdownButton<String>(
+                      value: capacidadCaminar,
+                      isDense: true,
+                      onChanged: (String newValue) {
+                        setState(() {
+                          capacidadCaminar = newValue;
+                        });
+                      },
+                      items: _capacidadCaminar.map((String value) {
+                        return new DropdownMenuItem<String>(
+                          value: value,
+                          child: new Text(value),
+                        );
+                      }).toList())),
+
+                      
+
               new Container(
                 padding: new EdgeInsets.only(top: 40.0),
                 child: new Row(
@@ -411,7 +478,7 @@ class _RegistroHVState extends State<RegistroHV> {
                   color: new Color(0xFF7E57C2),
                   child: new Text('Enviar', style: new TextStyle(
                       color: Colors.white, fontSize: 18.0)),
-                  onPressed: _handleSubmitted,
+                  onPressed: _createUser,
                 ),
               )
               )
@@ -489,6 +556,48 @@ class _RegistroHVState extends State<RegistroHV> {
         );
       }
     });
+  }
+
+   Future<Null> _createUser() async {
+    try {
+      var user = new Map();
+      user["nombre"] =nombre;
+      user["edad"] =edad;
+      user["genero"] =genero;
+      user["google_id"] ="10";
+      user["registrado"] =false;
+      user["direccion"] =direccion;
+      user["pais_nacimiento"] =paisNacimiento;
+      user["ciudad_nacimiento"] =ciudadNacimiento;
+      user["lugar_residencia"] =lugarResidencia;
+      user["fecha_nacimiento"] = fechaNacimiento;
+      user["ocupacion_principal"] =ocupacion;
+      user["escolaridad"] =escolaridad;
+      user["colegio"] =colegio;
+      user["estado_civil"] =estadoCivil;
+      user["fecha_matrimonio"] =fechaMatrimonio;
+      user["pasatiempo"] =pasatiempo;
+      user["genero_musical"] =generoMusical;
+      user["capacidad_fisica"] =capacidadFisica;
+      user["capacidad_caminar"] =_capacidadCaminar;
+
+      final String requestBody = json.encode(user);
+      print(requestBody);
+      HttpClientRequest request =
+          await httpClient.postUrl(Uri.parse(URL + '/users/createUser'))
+            ..headers.add(HttpHeaders.ACCEPT, ContentType.JSON)
+            ..headers.contentType = ContentType.JSON
+            ..headers.contentLength = requestBody.length
+            ..headers.chunkedTransferEncoding = false;
+      request.write(requestBody);
+      HttpClientResponse response = await request.close();
+      print(json
+          .decode(await response.transform(utf8.decoder).join())['nombre']);
+      Navigator.of(context).pushReplacement(new MaterialPageRoute(
+          builder: (BuildContext context) => new MyTabs()));
+    } catch (err) {
+      print(err);
+    }
   }
 
 }
