@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import './question.dart';
+import 'package:memories/tts.dart';
 
 class Quiz {
   List<Question> _questions;
@@ -17,10 +20,20 @@ class Quiz {
   Question get nextQuestion {
     _currentCuestionIndex++;
     if ( _currentCuestionIndex >= length ) return null;
+    Tts.speak(_questions[_currentCuestionIndex].question);
+    Tts.speak(_questions[_currentCuestionIndex].options[0]);
+    Tts.speak(_questions[_currentCuestionIndex].options[1]);
+    Tts.speak(_questions[_currentCuestionIndex].options[2]);
+    Tts.speak(_questions[_currentCuestionIndex].options[3]);
     return _questions[_currentCuestionIndex];
   }
 
   void answer(bool isCorrect) {
-    if (isCorrect) _score++;
+    if (isCorrect) {
+      _score++;
+      Tts.speak( "La respuesta es correcta" );
+    }else{
+      Tts.speak( "La respuesta es incorrecta");
+    }
   }
 }
