@@ -561,6 +561,7 @@ class _RegistroHVState extends State<RegistroHV> {
    Future<Null> _createUser() async {
     try {
       var user = new Map();
+      
       user["nombre"] =nombre;
       user["edad"] =edad;
       user["genero"] =genero;
@@ -579,8 +580,20 @@ class _RegistroHVState extends State<RegistroHV> {
       user["pasatiempo"] =pasatiempo;
       user["genero_musical"] =generoMusical;
       user["capacidad_fisica"] =capacidadFisica;
-      user["capacidad_caminar"] =_capacidadCaminar;
+      user["capacidad_caminar"] =capacidadCaminar;
 
+      List<Map> familiares = [];
+      
+      for (int i = 0; i< person.length;i++){
+       
+          familiares.add({
+            "nombre":person[i].nombre,
+            "parentesco": person[i].parentesco
+          });
+      }
+      user["familiares"] = familiares;
+      print(user);
+      
       final String requestBody = json.encode(user);
       print(requestBody);
       HttpClientRequest request =
