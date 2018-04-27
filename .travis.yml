@@ -13,6 +13,8 @@ befor_script:
     - git clone https://github.com/flutter/flutter.git -b beta
     - ./flutter/bin/flutter doctor
     - ./flutter/bin/flutter packages get
+script:
+    - ./flutter/bin/flutter build apk
 before_deploy:
   # Set up git user name and tag this commit
   - git config --local user.name "Edwin Montoya Jaramillo"
