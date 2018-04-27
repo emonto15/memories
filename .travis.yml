@@ -10,20 +10,11 @@ addons:
       - libstdc++6
       - fonts-droid
 before_script:
-
-before_deploy:
-   # Set up git user name and tag this commit
-     - git clone https://github.com/flutter/flutter.git -b beta
-     - ./flutter/bin/flutter doctor
-     - ./flutter/bin/flutter packages get
-    - git config --local user.name "Edwin Montoya Jaramillo"
-    - git config --local user.email "emonto15@eafit.edu.co"
-    - git tag "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
-  deploy:
-    provider: releases
-    api_key: "24a52acab673b96d3c584ff8a073b0a60f4d0f02"
-    file: "build/app/outputs/apk/app.apk"
-    skip_cleanup: true
+  - git clone https://github.com/flutter/flutter.git -b beta
+  - ./flutter/bin/flutter doctor
+  - ./flutter/bin/flutter packages get
+script:
+  - ./flutter/bin/flutter test
 cache:
   directories:
     - $HOME/.pub-cache
