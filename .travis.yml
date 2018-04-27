@@ -9,7 +9,7 @@ addons:
     packages:
       - libstdc++6
       - fonts-droid
-befor_script:
+before_script:
     - git clone https://github.com/flutter/flutter.git -b beta
     - ./flutter/bin/flutter doctor
     - ./flutter/bin/flutter packages get
