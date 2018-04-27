@@ -1,5 +1,20 @@
-os:
-  - linux
+os: linux
+language: android
+licenses:
+  - 'android-sdk-preview-license-.+'
+  - 'android-sdk-license-.+'
+  - 'google-gdk-license-.+'
+android:
+  components:
+    - tools
+    - platform-tools
+    - build-tools-27.0.3
+    - android-22
+    - sys-img-armeabi-v7a-google_apis-22
+    - extra-android-m2repository
+    - extra-google-m2repository
+    - extra-google-android-support
+jdk: oraclejdk8
 sudo: false
 addons:
   apt:
@@ -10,11 +25,14 @@ addons:
       - libstdc++6
       - fonts-droid
 before_script:
-    - git clone https://github.com/flutter/flutter.git -b beta
-    - ./flutter/bin/flutter doctor
-    - ./flutter/bin/flutter packages get
+  - wget https://services.gradle.org/distributions/gradle-4.4-all.zip
+  - unzip -qq gradle-4.4-all.zip
+  - export GRADLE_HOME=$PWD/gradle-4.4
+  - export PATH=$GRADLE_HOME/bin:$PATH
+  - git clone https://github.com/flutter/flutter.git -b master
 script:
-    - ./flutter/bin/flutter build apk
+  - ./flutter/bin/flutter -v build apk
+
 before_deploy:
   # Set up git user name and tag this commit
   - git config --local user.name "Edwin Montoya Jaramillo"
@@ -26,7 +44,10 @@ deploy:
   api_key: $GH_KEY
   file: "build/app/outputs/apk/app.apk"
   skip_cleanup: true
+
 cache:
   directories:
     - $HOME/.pub-cache
-language: flutter
+cache:
+  directories:
+    - $HOME/.pub-cache
