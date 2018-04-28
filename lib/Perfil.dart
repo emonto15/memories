@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+import 'package:memories/Constants.dart';
 
 class Perfil extends StatefulWidget{
   @override
@@ -6,6 +10,9 @@ class Perfil extends StatefulWidget{
 }
 
 class _PerfilState extends State<Perfil>{
+
+  var httpClient = new HttpClient();
+
  String nombre = "diego Perez";
   String edad = "21";
   String direccion = " calle 45 A sur # 39B 101";
@@ -15,11 +22,12 @@ class _PerfilState extends State<Perfil>{
   String ocupacionPrincipal = "Estudiante";
   String pasaTiempo = "Deportes";
   String generoMusical = "Electronica";
+  var nuevoMapa = new Map();
 
   void initState() {
     super.initState();
-   
-  }
+    _getUserInfo();
+    }
 
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -197,6 +205,43 @@ class _PerfilState extends State<Perfil>{
         ),
       )
     );
+  }
+
+
+  Future<Null> _getUserInfo() async {
+    try {
+      var user = new Map();
+      
+      user["google_id"] = "10";
+
+      final String requestBody = json.encode(user);
+      print(requestBody);
+      HttpClientRequest request =
+          await httpClient.getUrl(Uri.parse(URL + '/users/getUserInfo'))
+            ..headers.add(HttpHeaders.ACCEPT, ContentType.JSON)
+            ..headers.contentType = ContentType.JSON
+            ..headers.contentLength = requestBody.length
+            ..headers.chunkedTransferEncoding = false;
+       request.write(requestBody);
+      HttpClientResponse response = await request.close();
+      nuevoMapa = json
+          .decode(await response.transform(utf8.decoder).join());
+
+      
+      setState(() {
+              nombre = nuevoMapa['nombre'];
+              edad = nuevoMapa['edad'];
+              direccion = nuevoMapa['direccion'];
+              paisNacimieno = nuevoMapa['pais_nacimiento'];
+              ciudadNacimiento = nuevoMapa['ciudad_nacimiento'];
+              ocupacionPrincipal = nuevoMapa['ocupacion_principal'];
+              pasaTiempo = nuevoMapa['pasatiempo'];
+              generoMusical = nuevoMapa['genero_musical'];
+            }); 
+     
+    } catch (err) {
+      print(err);
+    }
   }
 
 
