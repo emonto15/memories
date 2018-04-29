@@ -5,6 +5,9 @@ import 'dart:io';
 import 'package:memories/Constants.dart';
 
 class Perfil extends StatefulWidget{
+
+  Perfil(this.googleId);
+  final String googleId;
   @override
   _PerfilState createState() => new _PerfilState();
 }
@@ -13,15 +16,15 @@ class _PerfilState extends State<Perfil>{
 
   var httpClient = new HttpClient();
 
- String nombre = "diego Perez";
-  String edad = "21";
-  String direccion = " calle 45 A sur # 39B 101";
-  String paisNacimieno = "Colombia";
-  String ciudadNacimiento="Envigado";
-  String fechaNacimiento= "24-10-1996";
-  String ocupacionPrincipal = "Estudiante";
-  String pasaTiempo = "Deportes";
-  String generoMusical = "Electronica";
+ String nombre = "";
+  String edad = "";
+  String direccion = "";
+  String paisNacimieno= "";
+  String ciudadNacimiento = "";
+  String fechaNacimiento = "";
+  String ocupacionPrincipal = "";
+  String pasaTiempo = "";
+  String generoMusical = "";
   var nuevoMapa = new Map();
 
   void initState() {
@@ -212,7 +215,7 @@ class _PerfilState extends State<Perfil>{
     try {
       var user = new Map();
       
-      user["google_id"] = "10";
+      user["google_id"] = widget.googleId;
 
       final String requestBody = json.encode(user);
       print(requestBody);
@@ -226,17 +229,21 @@ class _PerfilState extends State<Perfil>{
       HttpClientResponse response = await request.close();
       nuevoMapa = json
           .decode(await response.transform(utf8.decoder).join());
-
+        print("este es el mapa");
+        print(nuevoMapa);
       
       setState(() {
+
               nombre = nuevoMapa['nombre'];
               edad = nuevoMapa['edad'];
               direccion = nuevoMapa['direccion'];
+              fechaNacimiento = nuevoMapa['fecha_nacimiento'];
               paisNacimieno = nuevoMapa['pais_nacimiento'];
               ciudadNacimiento = nuevoMapa['ciudad_nacimiento'];
               ocupacionPrincipal = nuevoMapa['ocupacion_principal'];
               pasaTiempo = nuevoMapa['pasatiempo'];
               generoMusical = nuevoMapa['genero_musical'];
+
             }); 
      
     } catch (err) {

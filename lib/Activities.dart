@@ -20,8 +20,9 @@ import './Score_page.dart';
 
 class QuizPage extends StatefulWidget {
   final List<CameraDescription> cameras;
+  final String googleId;
 
-  QuizPage({this.cameras});
+  QuizPage({this.cameras,googleId});
 
   @override
   State createState() => new QuizPageState(cameras: cameras);
@@ -285,7 +286,7 @@ Widget build(BuildContext context) {
           Navigator.of(context).pushAndRemoveUntil(
               new MaterialPageRoute(
                   builder: (BuildContext context) =>
-                  new ScorePage(quiz.score, quiz.length)),
+                  new ScorePage(quiz.score, quiz.length,widget.googleId)),
                   (Route route) => route == null);
           return;
         }

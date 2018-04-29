@@ -7,8 +7,13 @@ import 'dart:io';
 import 'package:memories/Constants.dart';
 
 class RegistroHV extends StatefulWidget {
+
+   RegistroHV(this.googleId);
+  final String googleId;
+
   @override
   _RegistroHVState createState() => new _RegistroHVState();
+
 }
 
 final List<String> _genero = <String>['Masculino', 'Femenino'];
@@ -523,9 +528,6 @@ class _RegistroHVState extends State<RegistroHV> {
     return labelList;
   }
 
-  _handleSubmitted(){
-    Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => MyTabs()));
-  }
   _addPerson(){
     setState(() {
       if(_controller.text.isNotEmpty && parentesco!=null) {
@@ -565,7 +567,7 @@ class _RegistroHVState extends State<RegistroHV> {
       user["nombre"] =nombre;
       user["edad"] =edad;
       user["genero"] =genero;
-      user["google_id"] ="10";
+      user["google_id"] =widget.googleId;
       user["registrado"] =false;
       user["direccion"] =direccion;
       user["pais_nacimiento"] =paisNacimiento;
@@ -607,7 +609,7 @@ class _RegistroHVState extends State<RegistroHV> {
       print(json
           .decode(await response.transform(utf8.decoder).join())['nombre']);
       Navigator.of(context).pushReplacement(new MaterialPageRoute(
-          builder: (BuildContext context) => new MyTabs()));
+          builder: (BuildContext context) => new MyTabs(widget.googleId)));
     } catch (err) {
       print(err);
     }

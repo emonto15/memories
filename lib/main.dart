@@ -6,20 +6,24 @@ import 'package:memories/Activities_Landing_page.dart' as landingActivities;
 import 'dart:async';
 import 'package:memories/login.dart';
 import 'package:memories/tts.dart';
+import 'package:memories/Perfil.dart';
+import 'package:memories/RegistroHV.dart';
 
 Future<Null> main() async {
   if(true == true){
+    String googleId = "1";
     runApp(new MaterialApp(
-        home: new LoginPage()
-    ));
-  }else {
-    runApp(new MaterialApp(
-        home: new MyTabs()
+      
+        home: new MyTabs(googleId)
     ));
   }
 }
 
 class MyTabs extends StatefulWidget {
+
+  MyTabs(this.googleId);
+  final String googleId;
+
   @override
   MyTabsState createState() => new MyTabsState();
 }
@@ -66,9 +70,9 @@ class MyTabsState extends State<MyTabs> with SingleTickerProviderStateMixin {
             physics: neverScrollableScrollPhysics,
             controller: controller,
             children: <Widget>[
-              new perfil.Perfil(),
+              new perfil.Perfil(widget.googleId),
               new examen.LandingPage(),
-              new landingActivities.LandingPage(),
+              new landingActivities.LandingPage(widget.googleId),
               new reportes.Report(),
               new reportes.Report()
             ]

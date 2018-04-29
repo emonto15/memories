@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:memories/main.dart';
 import 'package:memories/Constants.dart';
+import 'package:memories/RegistroHV.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -136,7 +137,7 @@ class LoginPageState extends State<LoginPage>
   Future<Null> _handleSignIn() async {
     try {
       await _googleSignIn.signIn();
-      /*var currentUser = new Map();
+      var currentUser = new Map();
       currentUser["google_id"] = _googleSignIn.currentUser.id;
 
       final String requestBody = json.encode(currentUser);
@@ -149,10 +150,20 @@ class LoginPageState extends State<LoginPage>
             ..headers.chunkedTransferEncoding = false;
       request.write(requestBody);
       HttpClientResponse response = await request.close();
-      print(json
-          .decode(await response.transform(utf8.decoder).join())['registrado']);*/
-      Navigator.of(context).pushReplacement(new MaterialPageRoute(
-          builder: (BuildContext context) => new MyTabs()));
+          /**
+           * if(json
+          .decode(await response.transform(utf8.decoder).join())['registrado'] == false){
+               Navigator.of(context).pushReplacement(new MaterialPageRoute(
+          builder: (BuildContext context) => new MyTabs(_googleSignIn.currentUser.id)));
+
+          }else {
+           */
+          
+    
+          Navigator.of(context).pushReplacement(new MaterialPageRoute(
+          builder: (BuildContext context) => new RegistroHV(_googleSignIn.currentUser.id)));
+          
+      
     } catch (err) {
       print(err);
     }

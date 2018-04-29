@@ -7,7 +7,9 @@ import './Activities.dart';
 
 class LandingPage extends StatelessWidget {
   List<CameraDescription> cameras;
-  LandingPage();
+  final String googleId;
+  LandingPage(this.googleId);
+  
   @override
   Widget build(BuildContext context) {
     return new Material(
@@ -27,6 +29,6 @@ class LandingPage extends StatelessWidget {
   
   Future<Null> _handleTap(context) async {
      cameras = await availableCameras();
-    Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new QuizPage(cameras: cameras)));
+    Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new QuizPage(cameras: cameras,googleId:googleId)));
   }
 }
