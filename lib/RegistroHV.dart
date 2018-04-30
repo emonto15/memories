@@ -62,7 +62,7 @@ class _RegistroHVState extends State<RegistroHV> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return new Scaffold(
       key: _scaffoldKey,
 
       appBar: new AppBar(
@@ -524,7 +524,7 @@ class _RegistroHVState extends State<RegistroHV> {
   }
 
   _handleSubmitted(){
-    Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => MyTabs()));
+    Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new MyTabs()));
   }
   _addPerson(){
     setState(() {

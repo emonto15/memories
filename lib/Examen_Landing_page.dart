@@ -10,7 +10,7 @@ class LandingPage extends StatelessWidget {
     return new Material(
       color: Colors.white,
       child: new InkWell(
-        onTap: () => Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => paciente.ExamenPaciente())),
+        onTap: () => Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new paciente.ExamenPaciente())),
         child: new Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
