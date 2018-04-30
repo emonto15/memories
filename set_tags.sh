@@ -16,8 +16,8 @@ if [ "$TRAVIS_BRANCH" = "$BRANCH" ]; then
 
       # Add tag and push to master.
       git tag -a v${TRAVIS_BUILD_NUMBER} -m "Travis build $TRAVIS_BUILD_NUMBER pushed a tag."
-      git push origin --tags
-      git fetch origin
+      git push origin dev --tags
+      git fetch origin dev
 
       echo -e "Done magic with tags.\n"
   fi
