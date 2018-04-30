@@ -15,7 +15,7 @@ if [ "$TRAVIS_BRANCH" = "$BRANCH" ]; then
       git checkout dev
 
       # Add tag and push to master.
-      git tag -a v${TRAVIS_BUILD_NUMBER} -m "Travis build $TRAVIS_BUILD_NUMBER pushed a tag."
+      git tag -a v0.9 -m "Travis build $TRAVIS_BUILD_NUMBER pushed a tag."
       git push origin dev --tags
       git fetch origin dev
 
