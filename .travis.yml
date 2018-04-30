@@ -35,9 +35,6 @@ before_script:
 script:
   - ./flutter/bin/flutter -v build apk
 
-after_success:
-  - sh set_tags.sh
-
 before_deploy:
   # Set up git user name and tag this commit
   - git config --local user.name "Edwin Montoya Jaramillo"
@@ -49,6 +46,7 @@ deploy:
   file: "build/app/outputs/apk/app.apk"
   skip_cleanup: true
   prerelease: true
+  branch: dev
   on:
     branch: dev
     repo: emonto15/memories
