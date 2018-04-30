@@ -26,14 +26,22 @@ class _ExamenPaciente extends State<ExamenPaciente> {
     'Antioquia', 'Cundinamarca', 'Santader'
   ];
   String _department;
+  String _city;
+  String _weekDay;
+  String _monthOfYear;
+  String _year;
+  String _contructionElement;
+  String _town;
+  String _beachElement;
+
+
+
   final List<String> _allCities = <String>[
     'Medellin', 'Bogota', 'Cali'
   ];
-  String _city;
   final List<String> _weekDays = <String>[
     'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'
   ];
-  String _weekDay;
   final List<String> _monthsOfYear = <String>[
     'Enero',
     'Febrero',
@@ -48,7 +56,6 @@ class _ExamenPaciente extends State<ExamenPaciente> {
     'Noviembre',
     'Diciembre'
   ];
-  String _monthOfYear;
   final List<String> _years = <String>[
     '2010',
     '2011',
@@ -66,7 +73,6 @@ class _ExamenPaciente extends State<ExamenPaciente> {
     '2023',
     '2024'
   ];
-  String _year;
   final List<String> _towns = <String>[
     'Abejorral',
     'Bogota',
@@ -77,7 +83,6 @@ class _ExamenPaciente extends State<ExamenPaciente> {
     'New York',
     'San Rafael'
   ];
-  String _town;
   final List<String> _constructionElements = <String>[
     'Cemento',
     'Ladrillos',
@@ -86,8 +91,6 @@ class _ExamenPaciente extends State<ExamenPaciente> {
     'Pala',
     'Carretilla'
   ];
-  String _contructionElement;
-
   final List<String> _beachElements = <String>[
     'Linterna',
     'Chaqueta',
@@ -95,7 +98,6 @@ class _ExamenPaciente extends State<ExamenPaciente> {
     'Vestido de baño',
     'Espejo'
   ];
-  String _beachElement;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -414,6 +416,34 @@ class _ExamenPaciente extends State<ExamenPaciente> {
                   decoration: new InputDecoration(
                       hintText: 'Escribe el resultado en miles de pesos.'
                   )),
+            new Container(padding: new EdgeInsets.only(
+                right: 0.0, top: 20.0, left: 0.0, bottom: 0.0),
+                child: new Text(
+                    "4.  ¿Cuál de estas no pertenece a la lista?",
+                    style: new TextStyle(fontSize: 18.0)))
+            ,
+            new InputDecorator(
+              decoration: const InputDecoration(
+                labelText: 'Opciones',
+                hintText: '',
+              ),
+              isEmpty: _contructionElement == null,
+              child: new DropdownButton<String>(
+                value: _contructionElement,
+                isDense: true,
+                onChanged: (String newValue) {
+                  setState(() {
+                    _contructionElement = newValue;
+                  });
+                },
+                items: _constructionElements.map((String value) {
+                  return new DropdownMenuItem<String>(
+                    value: value,
+                    child: new Text(value),
+                  );
+                }).toList(),
+              ),
+            ),
               new Container(padding: new EdgeInsets.only(
                   right: 0.0, top: 20.0, left: 0.0, bottom: 0.0),
                   child: new Text(
@@ -468,7 +498,7 @@ class _ExamenPaciente extends State<ExamenPaciente> {
   }
 
   void _handleSubmitted() {
-    Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => informante.ExamenInformante()));
+    Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new informante.ExamenInformante()));
   }
 }
 
