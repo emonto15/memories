@@ -1,5 +1,6 @@
 os: linux
 language: android
+branch: dev
 licenses:
   - 'android-sdk-preview-license-.+'
   - 'android-sdk-license-.+'
