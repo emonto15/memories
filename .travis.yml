@@ -41,14 +41,13 @@ before_deploy:
   # Set up git user name and tag this commit
   - git config --local user.name "Edwin Montoya Jaramillo"
   - git config --local user.email "emonto15@eafit.edu.co"
-  - git tag "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
-
 
 deploy:
   provider: releases
   api_key: $GH_KEY
   file: "build/app/outputs/apk/app.apk"
   skip_cleanup: true
+  prerelease: true
   on:
     branch: dev
     repo: emonto15/memories
