@@ -45,6 +45,7 @@ deploy:
   file: "build/app/outputs/apk/app.apk"
   skip_cleanup: true
   target_commitish: dev
+  prerelease: true
   tag_name: 1.1-beta.1
 
 cache:
