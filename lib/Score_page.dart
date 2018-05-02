@@ -7,8 +7,9 @@ class ScorePage extends StatelessWidget {
 
   final int score;
   final int totalQuestions;
+  final String googleId;
 
-  ScorePage(this.score, this.totalQuestions);
+  ScorePage(this.score, this.totalQuestions,this.googleId);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +24,7 @@ class ScorePage extends StatelessWidget {
                 icon: new Icon(Icons.arrow_right),
                 color: Colors.white,
                 iconSize: 50.0,
-                onPressed: () => Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(builder: (BuildContext context) => new main.MyTabs()), (Route route) => route == null)
+                onPressed: () => Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(builder: (BuildContext context) => new main.MyTabs(googleId)), (Route route) => route == null)
             )
           ],
         )
