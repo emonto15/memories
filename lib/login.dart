@@ -135,7 +135,7 @@ class LoginPageState extends State<LoginPage>
 
   Future<Null> _handleSignIn() async {
     try {
-      await _googleSignIn.signIn();
+     // await _googleSignIn.signIn();
       /*var currentUser = new Map();
       currentUser["google_id"] = _googleSignIn.currentUser.id;
 

@@ -5,7 +5,7 @@ import 'package:memories/Reportes.dart' as reportes;
 import 'package:memories/Activities_Landing_page.dart' as landingActivities;
 import 'dart:async';
 import 'package:memories/login.dart';
-import 'package:memories/tts.dart';
+import 'package:memories/Musicoterapia.dart';
 
 Future<Null> main() async {
   if(true == true){
@@ -69,7 +69,7 @@ class MyTabsState extends State<MyTabs> with SingleTickerProviderStateMixin {
               new perfil.Perfil(),
               new examen.LandingPage(),
               new landingActivities.LandingPage(),
-              new reportes.Report(),
+              new Musicoterapia(),
               new reportes.Report()
             ]
         )
