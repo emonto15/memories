@@ -528,12 +528,9 @@ class _RegistroHVState extends State<RegistroHV> {
     return labelList;
   }
 
-<<<<<<< HEAD
-=======
-  _handleSubmitted(){
+/*  _handleSubmitted(){
     Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new MyTabs()));
-  }
->>>>>>> dev
+  }*/
   _addPerson(){
     setState(() {
       if(_controller.text.isNotEmpty && parentesco!=null) {

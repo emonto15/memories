@@ -11,10 +11,9 @@ import 'package:memories/RegistroHV.dart';
 
 Future<Null> main() async {
   if(true == true){
-    String googleId = "1";
     runApp(new MaterialApp(
       
-        home: new MyTabs(googleId)
+        home: new LoginPage()
     ));
   }
 }

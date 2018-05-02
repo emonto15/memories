@@ -100,7 +100,8 @@ class LoginPageState extends State<LoginPage>
                                       children: <Widget>[
                                         new Container(
                                           width: screenWidth * 0.2,
-                                          padding: new EdgeInsets.only(top: screenHeigth * 0.08),
+                                          padding: new EdgeInsets.only(
+                                              top: screenHeigth * 0.08),
                                           child: new MaterialButton(
                                             height: 50.0,
                                             minWidth: screenWidth * 0.2,
@@ -150,20 +151,17 @@ class LoginPageState extends State<LoginPage>
             ..headers.chunkedTransferEncoding = false;
       request.write(requestBody);
       HttpClientResponse response = await request.close();
-          /**
-           * if(json
-          .decode(await response.transform(utf8.decoder).join())['registrado'] == false){
-               Navigator.of(context).pushReplacement(new MaterialPageRoute(
-          builder: (BuildContext context) => new MyTabs(_googleSignIn.currentUser.id)));
-
-          }else {
-           */
-          
-    
-          Navigator.of(context).pushReplacement(new MaterialPageRoute(
-          builder: (BuildContext context) => new RegistroHV(_googleSignIn.currentUser.id)));
-          
-      
+      if (json.decode(
+              await response.transform(utf8.decoder).join())['registrado'] !=
+          false) {
+        Navigator.of(context).pushReplacement(new MaterialPageRoute(
+            builder: (BuildContext context) =>
+                new MyTabs(_googleSignIn.currentUser.id)));
+      } else {
+        Navigator.of(context).pushReplacement(new MaterialPageRoute(
+            builder: (BuildContext context) =>
+                new RegistroHV(_googleSignIn.currentUser.id)));
+      }
     } catch (err) {
       print(err);
     }
