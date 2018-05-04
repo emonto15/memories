@@ -95,7 +95,7 @@ class _PerfilState extends State<Perfil>{
                 child: new Row(
                   children:[
                     new Container(
-                      child: new Text("País de Nacimiento:",
+                      child: new Text("Departamento de Nacimiento:",
                         style: new TextStyle(fontSize: 18.0,fontWeight: FontWeight.bold ,),
                     )),
                     new Container(
@@ -134,7 +134,7 @@ class _PerfilState extends State<Perfil>{
                     )),
                     new Container(
                       padding: new EdgeInsets.only(left: 20.0),
-                      child: new Text(fechaNacimiento,
+                      child: new Text(fechaNacimiento.split("T")[0],
                        style: new TextStyle(fontSize: 18.0),),
                     )
                   ],
@@ -238,7 +238,7 @@ class _PerfilState extends State<Perfil>{
               edad = nuevoMapa['edad'];
               direccion = nuevoMapa['direccion'];
               fechaNacimiento = nuevoMapa['fecha_nacimiento'];
-              paisNacimieno = nuevoMapa['pais_nacimiento'];
+              paisNacimieno = nuevoMapa['departamento_nacimiento'];
               ciudadNacimiento = nuevoMapa['ciudad_nacimiento'];
               ocupacionPrincipal = nuevoMapa['ocupacion_principal'];
               pasaTiempo = nuevoMapa['pasatiempo'];

@@ -14,15 +14,15 @@ Future<Null> main() async {
     String googleId = "1";
     runApp(new MaterialApp(
       
-        home: new MyTabs(googleId)
+        home: new LoginPage()
     ));
   }
 }
 
 class MyTabs extends StatefulWidget {
-
-  MyTabs(this.googleId);
   final String googleId;
+  MyTabs(this.googleId);
+
 
   @override
   MyTabsState createState() => new MyTabsState();

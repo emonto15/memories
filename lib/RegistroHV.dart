@@ -5,6 +5,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:memories/Constants.dart';
+import 'package:intl/intl.dart';
 
 class RegistroHV extends StatefulWidget {
 
@@ -42,13 +43,8 @@ String parentesco;
 String nombreFamiliar ="";
 String capacidadFisica;
 String capacidadCaminar;
-String fechaNacimiento = "";
-String fechaMatrimonio = "";
-
-
-
-
-
+DateTime fechaNacimiento = new DateTime.now();
+DateTime fechaMatrimonio = new DateTime.now();
 
 
 final List<String> _parentesco = <String>['Padre','Madre','Hijo'];
@@ -58,6 +54,7 @@ class _RegistroHVState extends State<RegistroHV> {
   var httpClient = new HttpClient();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final TextEditingController _controller = new TextEditingController();
+  TimeOfDay birth_fromTime = const TimeOfDay(hour: 7, minute: 28);
 
  TextEditingController _controllerNombre = new TextEditingController();
   TextEditingController _controllerEdad= new TextEditingController();
@@ -65,7 +62,6 @@ class _RegistroHVState extends State<RegistroHV> {
   TextEditingController _controllerPaisNacimiento= new TextEditingController();
   TextEditingController _controllerCiudadNacimiento= new TextEditingController();
   TextEditingController _controllerLugarResidencia= new TextEditingController();
-  TextEditingController _controllerFechaNacimiento= new TextEditingController();
   TextEditingController _controllerOcupacion= new TextEditingController();
   TextEditingController _controllerColegio= new TextEditingController();
   TextEditingController _controllerFechaMatrimonio= new TextEditingController();
@@ -169,13 +165,13 @@ class _RegistroHVState extends State<RegistroHV> {
               ),
               new Container(
                   padding: new EdgeInsets.only(top: 20.0),
-                  child: new Text("5. Pais de nacimiento:",
+                  child: new Text("5. Departamento de nacimiento:",
                     style: new TextStyle(fontSize: 18.0),)
               ),
               new TextField(
                 controller: _controllerPaisNacimiento,
                   decoration: new InputDecoration(
-                      hintText:"Escribe el pais de nacimiento del paciente"
+                      hintText:"Escribe el departamento de nacimiento del paciente"
                   ),
                   onChanged: (String str) {
                     setState(() {
@@ -199,7 +195,6 @@ class _RegistroHVState extends State<RegistroHV> {
                     });
                   }
               ),
-
               new Container(
                   padding: new EdgeInsets.only(top: 20.0),
                   child: new Text("7. Lugar de residencia:",
@@ -216,23 +211,25 @@ class _RegistroHVState extends State<RegistroHV> {
                     });
                   }
               ),
-
-
               new Container(
                   padding: new EdgeInsets.only(top: 20.0),
-                  child: new Text("8. Fecha de nacimiento:",
+                  child: new Text("8. Fecha de nacimiento",
                     style: new TextStyle(fontSize: 18.0),)
               ),
-              new TextField(
-                  controller: _controllerFechaNacimiento,
-                  decoration: new InputDecoration(
-                      hintText:"Escribe la fecha de nacimiento del paciente"
-                  ),
-                  onChanged: (String str) {
-                    setState(() {
-                      fechaNacimiento = str;
-                    });
-                  }
+              new _DateTimePicker(
+                labelText: 'Fecha',
+                selectedDate: fechaNacimiento,
+                selectedTime: birth_fromTime,
+                selectDate: (DateTime date) {
+                  setState(() {
+                    fechaNacimiento = date;
+                  });
+                },
+                selectTime: (TimeOfDay time) {
+                  setState(() {
+                    birth_fromTime = time;
+                  });
+                },
               ),
               new Container(
                   padding: new EdgeInsets.only(top: 20.0),
@@ -318,22 +315,25 @@ class _RegistroHVState extends State<RegistroHV> {
                           child: new Text(value),
                         );
                       }).toList())),
-
               new Container(
                   padding: new EdgeInsets.only(top: 20.0),
-                  child: new Text("13. Fecha de Matrimonio :",
+                  child: new Text("13. Fecha de matrimonio",
                     style: new TextStyle(fontSize: 18.0),)
               ),
-              new TextField(
-                controller: _controllerFechaMatrimonio,
-                  decoration: new InputDecoration(
-                      hintText:"Escriba la fecha de matrimonio del paciente: DD/MM/AAAA"
-                  ),
-                  onChanged: (String str) {
-                    setState(() {
-                      fechaMatrimonio = str;
-                    });
-                  }
+              new _DateTimePicker(
+                labelText: 'Fecha',
+                selectedDate: fechaMatrimonio,
+                selectedTime: birth_fromTime,
+                selectDate: (DateTime date) {
+                  setState(() {
+                    fechaMatrimonio = date;
+                  });
+                },
+                selectTime: (TimeOfDay time) {
+                  setState(() {
+                    birth_fromTime = time;
+                  });
+                },
               ),
               new Container(
                   padding: new EdgeInsets.only(top: 20.0),
@@ -439,7 +439,7 @@ class _RegistroHVState extends State<RegistroHV> {
                         );
                       }).toList())),
 
-                      
+
 
               new Container(
                 padding: new EdgeInsets.only(top: 40.0),
@@ -585,31 +585,31 @@ class _RegistroHVState extends State<RegistroHV> {
    Future<Null> _createUser() async {
     try {
       var user = new Map();
-      
+
       user["nombre"] =nombre;
       user["edad"] =edad;
       user["genero"] =genero;
       user["google_id"] =widget.googleId;
       user["registrado"] =true;
       user["direccion"] =direccion;
-      user["pais_nacimiento"] =paisNacimiento;
+      user["departamento_nacimiento"] =paisNacimiento;
       user["ciudad_nacimiento"] =ciudadNacimiento;
       user["lugar_residencia"] =lugarResidencia;
-      user["fecha_nacimiento"] = fechaNacimiento;
+      user["fecha_nacimiento"] = fechaNacimiento.toIso8601String();
       user["ocupacion_principal"] =ocupacion;
       user["escolaridad"] =escolaridad;
       user["colegio"] =colegio;
       user["estado_civil"] =estadoCivil;
-      user["fecha_matrimonio"] =fechaMatrimonio;
+      user["fecha_matrimonio"] =fechaMatrimonio.toIso8601String();
       user["pasatiempo"] =pasatiempo;
       user["genero_musical"] =generoMusical;
       user["capacidad_fisica"] =capacidadFisica;
       user["capacidad_caminar"] =capacidadCaminar;
 
       List<Map> familiares = [];
-      
+
       for (int i = 0; i< person.length;i++){
-       
+
           familiares.add({
             "nombre":person[i].nombre,
             "parentesco": person[i].parentesco
@@ -617,7 +617,7 @@ class _RegistroHVState extends State<RegistroHV> {
       }
       user["familiares"] = familiares;
       print(user);
-      
+
       final String requestBody = json.encode(user);
       print(requestBody);
       HttpClientRequest request =
@@ -637,4 +637,109 @@ class _RegistroHVState extends State<RegistroHV> {
     }
   }
 
+}
+
+class _DateTimePicker extends StatelessWidget {
+  const _DateTimePicker({
+    Key key,
+    this.labelText,
+    this.selectedDate,
+    this.selectedTime,
+    this.selectDate,
+    this.selectTime
+  }) : super(key: key);
+
+  final String labelText;
+  final DateTime selectedDate;
+  final TimeOfDay selectedTime;
+  final ValueChanged<DateTime> selectDate;
+  final ValueChanged<TimeOfDay> selectTime;
+
+  Future<Null> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: new DateTime(1918),
+        lastDate: new DateTime(2101)
+    );
+    if (picked != null && picked != selectedDate)
+      selectDate(picked);
+  }
+
+  Future<Null> _selectTime(BuildContext context) async {
+    final TimeOfDay picked = await showTimePicker(
+        context: context,
+        initialTime: selectedTime
+    );
+    if (picked != null && picked != selectedTime)
+      selectTime(picked);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final TextStyle valueStyle = new TextStyle(fontSize: 17.0);
+    return new Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: <Widget>[
+        new Flexible(
+          fit: FlexFit.loose,
+          flex: 4,
+          child: new _InputDropdown(
+            labelText: labelText,
+            valueText: new DateFormat.yMMMd().format(selectedDate),
+            valueStyle: valueStyle,
+            onPressed: () {
+              _selectDate(context);
+            },
+          ),
+        ),
+        const SizedBox(height: 24.0)
+      ],
+    );
+  }
+
+}
+
+class _InputDropdown extends StatelessWidget {
+  const _InputDropdown({
+    Key key,
+    this.child,
+    this.labelText,
+    this.valueText,
+    this.valueStyle,
+    this.onPressed }) : super(key: key);
+
+  final String labelText;
+  final String valueText;
+  final TextStyle valueStyle;
+  final VoidCallback onPressed;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return new InkWell(
+      onTap: onPressed,
+      child: new InputDecorator(
+        decoration: new InputDecoration(
+          labelText: labelText,
+        ),
+        baseStyle: valueStyle,
+        child: new Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            new Text(valueText, style: valueStyle),
+            new Icon(Icons.arrow_drop_down,
+                color: Theme
+                    .of(context)
+                    .brightness == Brightness.light
+                    ? Colors.grey.shade700
+                    : Colors.white70
+            ),
+          ],
+        ),//... ?
+      ),
+    );
+  }
 }
