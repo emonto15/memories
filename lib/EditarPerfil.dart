@@ -5,6 +5,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:memories/Constants.dart';
+import 'package:intl/intl.dart';
 
 class EditarPerfil extends StatefulWidget {
 
@@ -23,7 +24,6 @@ final List<String> _pasatiempo = <String>['Deportes', 'Dibujar','Bailar', 'Pinta
 final List<String> _generoMusical = <String>['Música clásica', 'Blues','Jazz', 'Rock and Roll','Soul','Rock','Pop','Electronica','Salsa'];
 final List<String> _capacidadFisica = <String>['Excelente', 'Mas o menos', 'Mala'];
 final List<String> _capacidadCaminar = <String>['Con normalidad', 'Con dificultad', 'No es capaz'];
-final List<String> _parentesco = <String>['Padre','Madre','Hijo'];
 
 
 String nombre = "";
@@ -33,33 +33,32 @@ String direccion="";
 String paisNacimiento = "";
 String ciudadNacimiento = "";
 String ocupacion = "";
-String escolaridad = "";
+String escolaridad;
 String colegio = "";
 String estadoCivil;
 String pasatiempo;
 String generoMusical;
 String lugarResidencia="";
-String parentesco = "";
+String parentesco;
 String nombreFamiliar ="";
-String capacidadFisica = "";
-String capacidadCaminar = "";
-String fechaNacimiento = "";
-String fechaMatrimonio = "";
+String capacidadFisica;
+String capacidadCaminar;
+DateTime fechaNacimiento = new DateTime.now();
+DateTime fechaMatrimonio = new DateTime.now();
 var nuevoMapa = new Map();
 
 
 
-
-
-
-
+final List<String> _parentesco = <String>['Padre','Madre','Hijo'];
 
 
 class _EditarPerfilState extends State<EditarPerfil> {
   var httpClient = new HttpClient();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final TextEditingController _controller = new TextEditingController();
-  TextEditingController _controllerNombre;
+  TimeOfDay birth_fromTime = const TimeOfDay(hour: 7, minute: 28);
+
+   TextEditingController _controllerNombre;
   TextEditingController _controllerEdad;
   TextEditingController _controllerDireccion;
   TextEditingController _controllerPaisNacimiento;
@@ -69,18 +68,14 @@ class _EditarPerfilState extends State<EditarPerfil> {
   TextEditingController _controllerOcupacion;
   TextEditingController _controllerColegio;
   TextEditingController _controllerFechaMatrimonio;
-  
-
-
-
 
   List<personModel> person =[];
   List<Widget> labelList = [];
 
   void initState() {
     super.initState();
-   // _getUserInfo();
-    
+    _getUserInfo();
+    //_buildLabels(null);
   }
   @override
   Widget build(BuildContext context) {
@@ -104,6 +99,7 @@ class _EditarPerfilState extends State<EditarPerfil> {
                 style: new TextStyle(fontSize: 18.0),)
               ),
               new TextField(
+                controller: _controllerNombre,
                 decoration: new InputDecoration(
                   hintText: "Escribe el nombre del paciente"
                 ),
@@ -111,9 +107,7 @@ class _EditarPerfilState extends State<EditarPerfil> {
                   setState(() {
                     nombre =  str;
                   });
-                },
-                controller:_controllerNombre
-
+                }
               ),
               new Container(
                 padding: new EdgeInsets.only(top: 20.0),
@@ -121,6 +115,7 @@ class _EditarPerfilState extends State<EditarPerfil> {
                 style: new TextStyle(fontSize: 18.0),)
               ),
               new TextField(
+                controller: _controllerEdad,
                 decoration: new InputDecoration(
                     hintText:"Escribe la edad del paciente"
                 ),
@@ -128,8 +123,7 @@ class _EditarPerfilState extends State<EditarPerfil> {
                  setState(() {
                    edad = str;
                  });
-               },
-               controller: _controllerEdad,
+               }
               ),
               new Container(
                   padding: new EdgeInsets.only(top: 20.0),
@@ -154,7 +148,6 @@ class _EditarPerfilState extends State<EditarPerfil> {
                         return new DropdownMenuItem<String>(
                           value: value,
                           child: new Text(value),
-                          
                         );
                       }).toList())),
 
@@ -164,6 +157,7 @@ class _EditarPerfilState extends State<EditarPerfil> {
                     style: new TextStyle(fontSize: 18.0),)
               ),
               new TextField(
+                controller: _controllerDireccion,
                   decoration: new InputDecoration(
                       hintText:"Escribe la dirección del paciente"
                   ),
@@ -171,24 +165,23 @@ class _EditarPerfilState extends State<EditarPerfil> {
                     setState(() {
                       direccion = str;
                     });
-                  },
-                  controller: _controllerDireccion,
+                  }
               ),
               new Container(
                   padding: new EdgeInsets.only(top: 20.0),
-                  child: new Text("5. Pais de nacimiento:",
+                  child: new Text("5. Departamento de nacimiento:",
                     style: new TextStyle(fontSize: 18.0),)
               ),
               new TextField(
+                controller: _controllerPaisNacimiento,
                   decoration: new InputDecoration(
-                      hintText:"Escribe el pais de nacimiento del paciente"
+                      hintText:"Escribe el departamento de nacimiento del paciente"
                   ),
                   onChanged: (String str) {
                     setState(() {
                       paisNacimiento = str;
                     });
-                  },
-                  controller: _controllerPaisNacimiento,
+                  }
               ),
               new Container(
                   padding: new EdgeInsets.only(top: 20.0),
@@ -196,6 +189,7 @@ class _EditarPerfilState extends State<EditarPerfil> {
                     style: new TextStyle(fontSize: 18.0),)
               ),
               new TextField(
+                controller: _controllerCiudadNacimiento,
                   decoration: new InputDecoration(
                       hintText:"Escribe la ciudad de nacimiento del paciente"
                   ),
@@ -203,16 +197,15 @@ class _EditarPerfilState extends State<EditarPerfil> {
                     setState(() {
                       ciudadNacimiento = str;
                     });
-                  },
-                  controller: _controllerCiudadNacimiento,
+                  }
               ),
-
               new Container(
                   padding: new EdgeInsets.only(top: 20.0),
                   child: new Text("7. Lugar de residencia:",
                     style: new TextStyle(fontSize: 18.0),)
               ),
               new TextField(
+                controller: _controllerLugarResidencia,
                   decoration: new InputDecoration(
                       hintText:"Escribe el lugar de residencia del paciente"
                   ),
@@ -220,26 +213,27 @@ class _EditarPerfilState extends State<EditarPerfil> {
                     setState(() {
                       lugarResidencia = str;
                     });
-                  },
-                  controller: _controllerLugarResidencia,
+                  }
               ),
-
-
               new Container(
                   padding: new EdgeInsets.only(top: 20.0),
-                  child: new Text("8. Fecha de nacimiento:",
+                  child: new Text("8. Fecha de nacimiento",
                     style: new TextStyle(fontSize: 18.0),)
               ),
-              new TextField(
-                  decoration: new InputDecoration(
-                      hintText:"Escribe la fecha de nacimiento del paciente"
-                  ),
-                  onChanged: (String str) {
-                    setState(() {
-                      fechaNacimiento = str;
-                    });
-                  },
-                  controller: _controllerFechaNacimiento,
+              new _DateTimePicker(
+                labelText: 'Fecha',
+                selectedDate: fechaNacimiento,
+                selectedTime: birth_fromTime,
+                selectDate: (DateTime date) {
+                  setState(() {
+                    fechaNacimiento = date;
+                  });
+                },
+                selectTime: (TimeOfDay time) {
+                  setState(() {
+                    birth_fromTime = time;
+                  });
+                },
               ),
               new Container(
                   padding: new EdgeInsets.only(top: 20.0),
@@ -247,6 +241,7 @@ class _EditarPerfilState extends State<EditarPerfil> {
                     style: new TextStyle(fontSize: 18.0),)
               ),
               new TextField(
+                controller: _controllerOcupacion,
                   decoration: new InputDecoration(
                       hintText:"Escribe la ocupación principal del paciente"
                   ),
@@ -254,8 +249,7 @@ class _EditarPerfilState extends State<EditarPerfil> {
                     setState(() {
                       ocupacion = str;
                     });
-                  },
-                  controller: _controllerOcupacion,
+                  }
               ),
 
               new Container(
@@ -290,6 +284,7 @@ class _EditarPerfilState extends State<EditarPerfil> {
                     style: new TextStyle(fontSize: 18.0),)
               ),
               new TextField(
+                  controller: _controllerColegio,
                   decoration: new InputDecoration(
                       hintText:"Escribe el colegio en el que estudio el paciente"
                   ),
@@ -297,8 +292,7 @@ class _EditarPerfilState extends State<EditarPerfil> {
                     setState(() {
                       colegio = str;
                     });
-                  },
-                  controller: _controllerColegio,
+                  }
               ),
               new Container(
                   padding: new EdgeInsets.only(top: 20.0),
@@ -325,22 +319,25 @@ class _EditarPerfilState extends State<EditarPerfil> {
                           child: new Text(value),
                         );
                       }).toList())),
-
               new Container(
                   padding: new EdgeInsets.only(top: 20.0),
-                  child: new Text("13. Fecha de Matrimonio :",
+                  child: new Text("13. Fecha de matrimonio",
                     style: new TextStyle(fontSize: 18.0),)
               ),
-              new TextField(
-                  decoration: new InputDecoration(
-                      hintText:"Escriba la fecha de matrimonio del paciente: DD/MM/AAAA"
-                  ),
-                  onChanged: (String str) {
-                    setState(() {
-                      fechaMatrimonio = str;
-                    });
-                  },
-                  controller: _controllerFechaMatrimonio,
+              new _DateTimePicker(
+                labelText: 'Fecha',
+                selectedDate: fechaMatrimonio,
+                selectedTime: birth_fromTime,
+                selectDate: (DateTime date) {
+                  setState(() {
+                    fechaMatrimonio = date;
+                  });
+                },
+                selectTime: (TimeOfDay time) {
+                  setState(() {
+                    birth_fromTime = time;
+                  });
+                },
               ),
               new Container(
                   padding: new EdgeInsets.only(top: 20.0),
@@ -446,7 +443,7 @@ class _EditarPerfilState extends State<EditarPerfil> {
                         );
                       }).toList())),
 
-                      
+
 
               new Container(
                 padding: new EdgeInsets.only(top: 40.0),
@@ -592,31 +589,31 @@ class _EditarPerfilState extends State<EditarPerfil> {
    Future<Null> _updateUser() async {
     try {
       var user = new Map();
-      
+
       user["nombre"] =nombre;
       user["edad"] =edad;
       user["genero"] =genero;
       user["google_id"] =widget.googleId;
       user["registrado"] =true;
       user["direccion"] =direccion;
-      user["pais_nacimiento"] =paisNacimiento;
+      user["departamento_nacimiento"] =paisNacimiento;
       user["ciudad_nacimiento"] =ciudadNacimiento;
       user["lugar_residencia"] =lugarResidencia;
-      user["fecha_nacimiento"] = fechaNacimiento;
+      user["fecha_nacimiento"] = fechaNacimiento.toIso8601String();
       user["ocupacion_principal"] =ocupacion;
       user["escolaridad"] =escolaridad;
       user["colegio"] =colegio;
       user["estado_civil"] =estadoCivil;
-      user["fecha_matrimonio"] =fechaMatrimonio;
+      user["fecha_matrimonio"] =fechaMatrimonio.toIso8601String();
       user["pasatiempo"] =pasatiempo;
       user["genero_musical"] =generoMusical;
       user["capacidad_fisica"] =capacidadFisica;
       user["capacidad_caminar"] =capacidadCaminar;
 
       List<Map> familiares = [];
-      
+
       for (int i = 0; i< person.length;i++){
-       
+
           familiares.add({
             "nombre":person[i].nombre,
             "parentesco": person[i].parentesco
@@ -624,7 +621,7 @@ class _EditarPerfilState extends State<EditarPerfil> {
       }
       user["familiares"] = familiares;
       print(user);
-      
+
       final String requestBody = json.encode(user);
       print(requestBody);
       HttpClientRequest request =
@@ -635,8 +632,7 @@ class _EditarPerfilState extends State<EditarPerfil> {
             ..headers.chunkedTransferEncoding = false;
       request.write(requestBody);
       HttpClientResponse response = await request.close();
-      print(json
-          .decode(await response.transform(utf8.decoder).join())['nombre']);
+      print(response);
       Navigator.of(context).pushReplacement(new MaterialPageRoute(
           builder: (BuildContext context) => new MyTabs(widget.googleId)));
     } catch (err) {
@@ -645,7 +641,8 @@ class _EditarPerfilState extends State<EditarPerfil> {
   }
 
 
-   Future<Null> _getUserInfo() async {
+
+  Future<Null> _getUserInfo() async {
     try {
       var user = new Map();
       
@@ -672,8 +669,8 @@ class _EditarPerfilState extends State<EditarPerfil> {
               edad = nuevoMapa['edad'];
               genero = nuevoMapa['genero'];
               direccion = nuevoMapa['direccion'];
-              fechaNacimiento = nuevoMapa['fecha_nacimiento'];
-              paisNacimiento = nuevoMapa['pais_nacimiento'];
+              fechaNacimiento = DateTime.parse(nuevoMapa['fecha_nacimiento']);
+              paisNacimiento = nuevoMapa['departamento_nacimiento'];
               ciudadNacimiento = nuevoMapa['ciudad_nacimiento'];
               ocupacion = nuevoMapa['ocupacion_principal'];
               escolaridad = nuevoMapa['escolaridad'];
@@ -684,7 +681,7 @@ class _EditarPerfilState extends State<EditarPerfil> {
               lugarResidencia = nuevoMapa['lugar_residencia'];
               capacidadFisica = nuevoMapa['capacidad_fisica'];
               capacidadCaminar = nuevoMapa['capacidad_caminar'];
-              fechaMatrimonio = nuevoMapa['fecha_matrimonio'];
+              fechaMatrimonio = DateTime.parse(nuevoMapa['fecha_matrimonio']);
 
               _controllerNombre = new TextEditingController(text : nombre);
               _controllerEdad = new TextEditingController(text : edad);
@@ -692,30 +689,20 @@ class _EditarPerfilState extends State<EditarPerfil> {
               _controllerPaisNacimiento = new TextEditingController(text : paisNacimiento);
               _controllerCiudadNacimiento = new TextEditingController(text : ciudadNacimiento);
               _controllerLugarResidencia = new TextEditingController(text : lugarResidencia);
-              _controllerFechaNacimiento = new TextEditingController(text : fechaNacimiento);
+              //_controllerFechaNacimiento = new TextEditingController(text : fechaNacimiento.toIso8601String());
               _controllerOcupacion = new TextEditingController(text : ocupacion);
               _controllerColegio = new TextEditingController(text : colegio);
-              _controllerFechaMatrimonio = new TextEditingController(text : fechaMatrimonio);
-
-
-            // if ( nuevoMapa['familiares'] != null){
+              //_controllerFechaMatrimonio = new TextEditingController(text : fechaMatrimonio.toIso8601String());
+            print("esto es el length de familiares");
+            print(nuevoMapa['familiares'].length);
+            
+             
 
                   for(int i = 0; i <nuevoMapa['familiares'].length;i++ ){
                 person.add(new personModel(nuevoMapa["familiares"][i]['nombre'], nuevoMapa["familiares"][i]['parentesco']));
               }
-              print(nuevoMapa['familiares'].length);
-              print(nuevoMapa["familiares"][0]['nombre']);
 
-             // }
-              
-             
-              
-  
-
-
-              
-
-              _buildLabels(null);
+             _buildLabels(null);
 
 
             }); 
@@ -725,4 +712,111 @@ class _EditarPerfilState extends State<EditarPerfil> {
     }
   }
 
+}
+
+class _DateTimePicker extends StatelessWidget {
+  const _DateTimePicker({
+    Key key,
+    this.labelText,
+    this.selectedDate,
+    this.selectedTime,
+    this.selectDate,
+    this.selectTime
+  }) : super(key: key);
+
+  final String labelText;
+  final DateTime selectedDate;
+  final TimeOfDay selectedTime;
+  final ValueChanged<DateTime> selectDate;
+  final ValueChanged<TimeOfDay> selectTime;
+
+  Future<Null> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: new DateTime(1918),
+        lastDate: new DateTime(2101)
+    );
+    if (picked != null && picked != selectedDate)
+      selectDate(picked);
+  }
+
+  Future<Null> _selectTime(BuildContext context) async {
+    final TimeOfDay picked = await showTimePicker(
+        context: context,
+        initialTime: selectedTime
+    );
+    if (picked != null && picked != selectedTime)
+      selectTime(picked);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final TextStyle valueStyle = new TextStyle(fontSize: 17.0);
+    return new Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: <Widget>[
+        new Flexible(
+          fit: FlexFit.loose,
+          flex: 4,
+          child: new _InputDropdown(
+            labelText: labelText,
+            valueText: new DateFormat.yMMMd().format(selectedDate),
+            valueStyle: valueStyle,
+            onPressed: () {
+              _selectDate(context);
+            },
+          ),
+        ),
+        const SizedBox(height: 24.0)
+      ],
+    );
+  }
+
+  
+
+}
+
+class _InputDropdown extends StatelessWidget {
+  const _InputDropdown({
+    Key key,
+    this.child,
+    this.labelText,
+    this.valueText,
+    this.valueStyle,
+    this.onPressed }) : super(key: key);
+
+  final String labelText;
+  final String valueText;
+  final TextStyle valueStyle;
+  final VoidCallback onPressed;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return new InkWell(
+      onTap: onPressed,
+      child: new InputDecorator(
+        decoration: new InputDecoration(
+          labelText: labelText,
+        ),
+        baseStyle: valueStyle,
+        child: new Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            new Text(valueText, style: valueStyle),
+            new Icon(Icons.arrow_drop_down,
+                color: Theme
+                    .of(context)
+                    .brightness == Brightness.light
+                    ? Colors.grey.shade700
+                    : Colors.white70
+            ),
+          ],
+        ),//... ?
+      ),
+    );
+  }
 }

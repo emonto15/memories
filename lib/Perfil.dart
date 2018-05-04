@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:memories/Constants.dart';
+import 'package:memories/EditarPerfil.dart';
 
 class Perfil extends StatefulWidget{
 
@@ -198,7 +199,7 @@ class _PerfilState extends State<Perfil>{
                   color: new Color(0xFF7E57C2),
                   child: new Text('Editar', style: new TextStyle(
                       color: Colors.white, fontSize: 18.0)),
-                  onPressed: null,
+                  onPressed:_editarPagina ,
                 ),
               )
               )
@@ -208,6 +209,10 @@ class _PerfilState extends State<Perfil>{
         ),
       )
     );
+  }
+
+void _editarPagina() {
+    Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new EditarPerfil(widget.googleId)));
   }
 
 
