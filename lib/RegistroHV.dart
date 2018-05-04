@@ -73,6 +73,8 @@ class _RegistroHVState extends State<RegistroHV> {
     super.initState();
     _buildLabels(null);
   }
+
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(

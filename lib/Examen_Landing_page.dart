@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:memories/E_Paciente.dart' as paciente;
 
 class LandingPage extends StatelessWidget {
-  final List<CameraDescription> cameras;
-  LandingPage({this.cameras});
+  final String googleId;
+  LandingPage(this.googleId);
   @override
   Widget build(BuildContext context) {
     return new Material(
       color: Colors.white,
       child: new InkWell(
-        onTap: () => Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new paciente.ExamenPaciente())),
+        onTap: () => Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new paciente.ExamenPaciente(this.googleId))),
         child: new Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[

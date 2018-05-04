@@ -1,39 +1,28 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:memories/Constants.dart';
 import 'package:memories/E_Informante.dart' as informante;
 
 class ExamenPaciente extends StatefulWidget {
+  final String googleId;
+
+  ExamenPaciente(this.googleId);
 
   @override
   _ExamenPaciente createState() => new _ExamenPaciente();
+
 }
 
 class _ExamenPaciente extends State<ExamenPaciente> {
+  var httpClient = new HttpClient();
   final TextEditingController college_controller = new TextEditingController();
   final TextEditingController ocupation_controller = new TextEditingController();
   final TextEditingController milesdep_controller = new TextEditingController();
   final TextEditingController monedasde_controller = new TextEditingController();
   final TextEditingController resta_controller = new TextEditingController();
-
-  int radioValue = 0;
-  bool switchValue = false;
-  DateTime birth_fromDate = new DateTime.now();
-  TimeOfDay birth_fromTime = const TimeOfDay(hour: 7, minute: 28);
-  DateTime actual_fromDate = new DateTime.now();
-  TimeOfDay actual_fromTime = const TimeOfDay(hour: 7, minute: 28);
-  final List<String> _allDepartments = <String>[
-    'Antioquia', 'Cundinamarca', 'Santader'
-  ];
-  String _department;
-  String _city;
-  String _weekDay;
-  String _monthOfYear;
-  String _year;
-  String _contructionElement;
-  String _town;
-  String _beachElement;
-
 
 
   final List<String> _allCities = <String>[
@@ -74,14 +63,43 @@ class _ExamenPaciente extends State<ExamenPaciente> {
     '2024'
   ];
   final List<String> _towns = <String>[
-    'Abejorral',
-    'Bogota',
-    'Medellin',
-    'Envigado',
-    'Itagui',
-    'Cali',
-    'New York',
-    'San Rafael'
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    '10',
+    '11',
+    '12',
+    '13',
+    '14',
+    '15',
+    '16',
+    '17',
+    '18',
+    '19',
+    '20',
+    '21',
+    '22',
+    '23',
+    '24',
+    '25',
+    '26',
+    '27',
+    '28',
+    '29',
+    '30',
+    '31'
   ];
   final List<String> _constructionElements = <String>[
     'Cemento',
@@ -101,6 +119,162 @@ class _ExamenPaciente extends State<ExamenPaciente> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
+  String departamentoNacimieno = "";
+  String ciudadNacimiento = "";
+  String fechaNacimiento = "";
+  String ocupacionPrincipal = "";
+  String colegio = "";
+  var nuevoMapa = new Map();
+
+  int radioValue = 0;
+  bool switchValue = false;
+  DateTime birth_fromDate = new DateTime.now();
+  TimeOfDay birth_fromTime = const TimeOfDay(hour: 7, minute: 28);
+  DateTime actual_fromDate = new DateTime.now();
+  TimeOfDay actual_fromTime = const TimeOfDay(hour: 7, minute: 28);
+  final List<String> _allDepartments = <String>[
+    'Antioquia', 'Cundinamarca', 'Santader'
+  ];
+  String _department;
+  String _city;
+  String _colegio;
+  String _ocupacion;
+  String _weekDay;
+  String _monthOfYear;
+  String _year;
+  String _contructionElement;
+  String _town;
+  String _beachElement;
+  String _milesDePesos;
+  String _monedasDe50;
+  String _restarle;
+
+
+  void _handleSubmitted() {
+    int memoryScore, judgeScore, orientationScore;
+    memoryScore = 0; judgeScore = 0; orientationScore = 0;
+    //Memory Checks
+    if(birth_fromDate.toIso8601String().split("T")[0] == fechaNacimiento.split('T')[0]){
+      memoryScore+=1;
+    }
+    if(_department == departamentoNacimieno){
+      memoryScore+=1;
+    }
+    if(_city == ciudadNacimiento){
+      memoryScore+=1;
+    }
+    if(_colegio == colegio){
+      memoryScore+=1;
+    }
+    if(_ocupacion == ocupacionPrincipal){
+      memoryScore+=1;
+    }
+    //OrientationChecks
+    if(actual_fromDate.toIso8601String().split("T")[0] == new DateTime.now().toIso8601String().split("T")[0]){
+      judgeScore+=1;
+    }
+    if(_weekDay == weekDay(new DateTime.now().weekday)){
+      judgeScore+=1;
+    }
+    if(_monthOfYear == weekDay(new DateTime.now().month)){
+      judgeScore+=1;
+    }
+    if(_year == new DateTime.now().year.toString()){
+      judgeScore+=1;
+    }
+    if(_town == new DateTime.now().day.toString()){
+      judgeScore+=1;
+    }
+    //JudgeChecks
+    if(_milesDePesos == "1000"){
+      orientationScore+=1;
+    }
+    if(_monedasDe50 == "27"){
+      orientationScore+=1;
+    }
+    if(_restarle == "20"){
+      orientationScore+=1;
+    }
+    if(_contructionElement == "Flecha"){
+      orientationScore+=1;
+    }
+    if(_beachElement == "Vestido de baño"){
+      orientationScore+=1;
+    }
+
+
+    print("memoryScore"+ memoryScore.toString());
+    print("judgeScore"+judgeScore.toString());
+    print("orientationScore"+orientationScore.toString());
+
+    Navigator.of(context).push(new MaterialPageRoute(
+        builder: (BuildContext context) => new informante.ExamenInformante()));
+  }
+
+  void initState() {
+    super.initState();
+    _getUserInfo();
+  }
+
+  String weekDay(int i){
+    if(i==1){return _weekDays[0];}
+    if(i==2){return _weekDays[1];}
+    if(i==3){return _weekDays[2];}
+    if(i==4){return _weekDays[3];}
+    if(i==5){return _weekDays[4];}
+    if(i==6){return _weekDays[5];}
+    if(i==7){return _weekDays[6];}
+    throw new Exception("no es ningun dia de la semana");
+  }
+
+  String month(int i){
+    if(i==1){return _monthsOfYear[0];}
+    if(i==2){return _monthsOfYear[1];}
+    if(i==3){return _monthsOfYear[2];}
+    if(i==4){return _monthsOfYear[3];}
+    if(i==5){return _monthsOfYear[4];}
+    if(i==6){return _monthsOfYear[5];}
+    if(i==7){return _monthsOfYear[6];}
+    if(i==8){return _monthsOfYear[7];}
+    if(i==9){return _monthsOfYear[8];}
+    if(i==10){return _monthsOfYear[9];}
+    if(i==11){return _monthsOfYear[10];}
+    if(i==12){return _monthsOfYear[11];}
+    throw new Exception("no es ningun dia de la semana");
+  }
+
+  Future<Null> _getUserInfo() async {
+    try {
+      var user = new Map();
+
+      user["google_id"] = widget.googleId;
+
+      final String requestBody = json.encode(user);
+      print(requestBody);
+      HttpClientRequest request =
+      await httpClient.getUrl(Uri.parse(URL + '/users/getUserInfo'))
+        ..headers.add(HttpHeaders.ACCEPT, ContentType.JSON)
+        ..headers.contentType = ContentType.JSON
+        ..headers.contentLength = requestBody.length
+        ..headers.chunkedTransferEncoding = false;
+      request.write(requestBody);
+      HttpClientResponse response = await request.close();
+      nuevoMapa = json
+          .decode(await response.transform(utf8.decoder).join());
+      print("este es el mapa");
+      print(nuevoMapa);
+
+      setState(() {
+        departamentoNacimieno = nuevoMapa['departamento_nacimiento'];
+        colegio = nuevoMapa['colegio'];
+        fechaNacimiento = nuevoMapa['fecha_nacimiento'];
+        ciudadNacimiento = nuevoMapa['ciudad_nacimiento'];
+        ocupacionPrincipal = nuevoMapa['ocupacion_principal'];
+      });
+    } catch (err) {
+      print(err);
+    }
+  }
 
   void handleRadioValueChanged(int value) {
     setState(() {
@@ -112,9 +286,9 @@ class _ExamenPaciente extends State<ExamenPaciente> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-          title: new Center(child: new Text("Paciente")),
-          backgroundColor: new Color(0xFF7E57C2),
-          automaticallyImplyLeading: false,
+        title: new Center(child: new Text("Paciente")),
+        backgroundColor: new Color(0xFF7E57C2),
+        automaticallyImplyLeading: false,
       ),
       key: _scaffoldKey,
       body: new DropdownButtonHideUnderline(
@@ -220,15 +394,20 @@ class _ExamenPaciente extends State<ExamenPaciente> {
                       style: new TextStyle(fontSize: 18.0)))
               ,
               new TextField(
-                controller: college_controller,
-                decoration: new InputDecoration(
-                  hintText: 'Colegio',
-                ),
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .display1
-                    .copyWith(fontSize: 18.0),
+                  controller: college_controller,
+                  decoration: new InputDecoration(
+                    hintText: 'Colegio',
+                  ),
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .display1
+                      .copyWith(fontSize: 18.0),
+                  onChanged: (String str) {
+                    setState(() {
+                      _colegio = str;
+                    });
+                  }
               ),
               new Container(padding: new EdgeInsets.only(
                   right: 0.0, top: 20.0, left: 0.0, bottom: 0.0),
@@ -240,7 +419,12 @@ class _ExamenPaciente extends State<ExamenPaciente> {
                   controller: ocupation_controller,
                   decoration: new InputDecoration(
                       hintText: 'Ocupación'
-                  )),
+                  ),
+                  onChanged: (String str) {
+                    setState(() {
+                      _ocupacion = str;
+                    });
+                  }),
               new Container(padding: new EdgeInsets.only(top: 60.0),
                   child: new Text("Orientación:", style: new TextStyle(
                       fontWeight: FontWeight.bold, fontSize: 25.0))
@@ -353,12 +537,12 @@ class _ExamenPaciente extends State<ExamenPaciente> {
               new Container(padding: new EdgeInsets.only(
                   right: 0.0, top: 20.0, left: 0.0, bottom: 0.0),
                   child: new Text(
-                      "5. ¿En qué pueblo o ciudad estamos?",
+                      "5. ¿Que día del mes es hoy?",
                       style: new TextStyle(fontSize: 18.0)))
               ,
               new InputDecorator(
                 decoration: const InputDecoration(
-                  labelText: 'Pueblo o ciudad',
+                  labelText: 'Día',
                   hintText: '',
                 ),
                 isEmpty: _town == null,
@@ -393,7 +577,13 @@ class _ExamenPaciente extends State<ExamenPaciente> {
                   controller: milesdep_controller,
                   decoration: new InputDecoration(
                       hintText: 'Escribe el resultado en miles de pesos.'
-                  )),
+                  ),
+                  onChanged: (String str) {
+                    setState(() {
+                      _milesDePesos = str;
+                    });
+                  }
+              ),
               new Container(padding: new EdgeInsets.only(
                   right: 0.0, top: 20.0, left: 0.0, bottom: 0.0),
                   child: new Text(
@@ -404,7 +594,12 @@ class _ExamenPaciente extends State<ExamenPaciente> {
                   controller: monedasde_controller,
                   decoration: new InputDecoration(
                       hintText: 'Escribe el resultado en miles de pesos.'
-                  )),
+                  ),
+                  onChanged: (String str) {
+                    setState(() {
+                      _monedasDe50 = str;
+                    });
+                  }),
               new Container(padding: new EdgeInsets.only(
                   right: 0.0, top: 20.0, left: 0.0, bottom: 0.0),
                   child: new Text(
@@ -415,35 +610,40 @@ class _ExamenPaciente extends State<ExamenPaciente> {
                   controller: resta_controller,
                   decoration: new InputDecoration(
                       hintText: 'Escribe el resultado en miles de pesos.'
-                  )),
-            new Container(padding: new EdgeInsets.only(
-                right: 0.0, top: 20.0, left: 0.0, bottom: 0.0),
-                child: new Text(
-                    "4.  ¿Cuál de estas no pertenece a la lista?",
-                    style: new TextStyle(fontSize: 18.0)))
-            ,
-            new InputDecorator(
-              decoration: const InputDecoration(
-                labelText: 'Opciones',
-                hintText: '',
+                  ),
+                  onChanged: (String str) {
+                    setState(() {
+                      _restarle = str;
+                    });
+                  }),
+              new Container(padding: new EdgeInsets.only(
+                  right: 0.0, top: 20.0, left: 0.0, bottom: 0.0),
+                  child: new Text(
+                      "4.  ¿Cuál de estas no pertenece a la lista?",
+                      style: new TextStyle(fontSize: 18.0)))
+              ,
+              new InputDecorator(
+                decoration: const InputDecoration(
+                  labelText: 'Opciones',
+                  hintText: '',
+                ),
+                isEmpty: _contructionElement == null,
+                child: new DropdownButton<String>(
+                  value: _contructionElement,
+                  isDense: true,
+                  onChanged: (String newValue) {
+                    setState(() {
+                      _contructionElement = newValue;
+                    });
+                  },
+                  items: _constructionElements.map((String value) {
+                    return new DropdownMenuItem<String>(
+                      value: value,
+                      child: new Text(value),
+                    );
+                  }).toList(),
+                ),
               ),
-              isEmpty: _contructionElement == null,
-              child: new DropdownButton<String>(
-                value: _contructionElement,
-                isDense: true,
-                onChanged: (String newValue) {
-                  setState(() {
-                    _contructionElement = newValue;
-                  });
-                },
-                items: _constructionElements.map((String value) {
-                  return new DropdownMenuItem<String>(
-                    value: value,
-                    child: new Text(value),
-                  );
-                }).toList(),
-              ),
-            ),
               new Container(padding: new EdgeInsets.only(
                   right: 0.0, top: 20.0, left: 0.0, bottom: 0.0),
                   child: new Text(
@@ -497,11 +697,7 @@ class _ExamenPaciente extends State<ExamenPaciente> {
     ));
   }
 
-  void _handleSubmitted() {
-    Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new informante.ExamenInformante()));
-  }
 }
-
 
 class _DateTimePicker extends StatelessWidget {
   const _DateTimePicker({
@@ -602,7 +798,7 @@ class _InputDropdown extends StatelessWidget {
                     : Colors.white70
             ),
           ],
-        ),//... ?
+        ), //... ?
       ),
     );
   }

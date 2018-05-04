@@ -71,7 +71,7 @@ class MyTabsState extends State<MyTabs> with SingleTickerProviderStateMixin {
             controller: controller,
             children: <Widget>[
               new perfil.Perfil(widget.googleId),
-              new examen.LandingPage(),
+              new examen.LandingPage(widget.googleId),
               new landingActivities.LandingPage(widget.googleId),
               new reportes.Report(),
               new reportes.Report()
