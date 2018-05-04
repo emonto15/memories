@@ -19,7 +19,7 @@ import './Score_page.dart';
 
 class QuizPage extends StatefulWidget {
   final List<CameraDescription> cameras;
-  final String googleId;
+  final String googleId = "";
 
   QuizPage({this.cameras,googleId});
 

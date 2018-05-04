@@ -3,11 +3,9 @@ import 'package:memories/Perfil.dart' as perfil;
 import 'package:memories/Examen_Landing_page.dart' as examen;
 import 'package:memories/Reportes.dart' as reportes;
 import 'package:memories/Activities_Landing_page.dart' as landingActivities;
+import 'package:memories/Musicoterapia.dart';
 import 'dart:async';
 import 'package:memories/login.dart';
-import 'package:memories/tts.dart';
-import 'package:memories/Perfil.dart';
-import 'package:memories/RegistroHV.dart';
 
 Future<Null> main() async {
   if(true == true){
@@ -72,7 +70,7 @@ class MyTabsState extends State<MyTabs> with SingleTickerProviderStateMixin {
               new perfil.Perfil(widget.googleId),
               new examen.LandingPage(),
               new landingActivities.LandingPage(widget.googleId),
-              new reportes.Report(),
+              new Musicoterapia(),
               new reportes.Report()
             ]
         )

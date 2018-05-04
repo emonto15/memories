@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:ui';
 import 'package:memories/UI/control_Button.dart';
 
 class Musicoterapia extends StatefulWidget {
@@ -81,20 +79,6 @@ class MusicoterapiaState extends State<Musicoterapia> {
                         width: screenWidth * 0.20,
                         height: screenWidth * 0.20,
                       )))
-                    ],
-                  ),
-                  new Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      new Center(
-                          child: new Container(
-                              child: new Row(children: <Widget>[
-                        new Text("1:00"),
-                        new Slider(
-                            min: 0.0, max: 100.0, value: 35.0, onChanged: null),
-                        new Text("3:00")
-                      ])))
                     ],
                   ),
                   new Row(
