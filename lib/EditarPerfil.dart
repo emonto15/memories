@@ -6,13 +6,13 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:memories/Constants.dart';
 
-class RegistroHV extends StatefulWidget {
+class EditarPerfil extends StatefulWidget {
 
-   RegistroHV(this.googleId);
+   EditarPerfil(this.googleId);
   final String googleId;
 
   @override
-  _RegistroHVState createState() => new _RegistroHVState();
+  _EditarPerfilState createState() => new _EditarPerfilState();
 
 }
 
@@ -23,6 +23,7 @@ final List<String> _pasatiempo = <String>['Deportes', 'Dibujar','Bailar', 'Pinta
 final List<String> _generoMusical = <String>['Música clásica', 'Blues','Jazz', 'Rock and Roll','Soul','Rock','Pop','Electronica','Salsa'];
 final List<String> _capacidadFisica = <String>['Excelente', 'Mas o menos', 'Mala'];
 final List<String> _capacidadCaminar = <String>['Con normalidad', 'Con dificultad', 'No es capaz'];
+final List<String> _parentesco = <String>['Padre','Madre','Hijo'];
 
 
 String nombre = "";
@@ -32,18 +33,19 @@ String direccion="";
 String paisNacimiento = "";
 String ciudadNacimiento = "";
 String ocupacion = "";
-String escolaridad;
+String escolaridad = "";
 String colegio = "";
 String estadoCivil;
 String pasatiempo;
 String generoMusical;
 String lugarResidencia="";
-String parentesco;
+String parentesco = "";
 String nombreFamiliar ="";
-String capacidadFisica;
-String capacidadCaminar;
+String capacidadFisica = "";
+String capacidadCaminar = "";
 String fechaNacimiento = "";
 String fechaMatrimonio = "";
+var nuevoMapa = new Map();
 
 
 
@@ -51,31 +53,34 @@ String fechaMatrimonio = "";
 
 
 
-final List<String> _parentesco = <String>['Padre','Madre','Hijo'];
 
 
-class _RegistroHVState extends State<RegistroHV> {
+class _EditarPerfilState extends State<EditarPerfil> {
   var httpClient = new HttpClient();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final TextEditingController _controller = new TextEditingController();
+  TextEditingController _controllerNombre;
+  TextEditingController _controllerEdad;
+  TextEditingController _controllerDireccion;
+  TextEditingController _controllerPaisNacimiento;
+  TextEditingController _controllerCiudadNacimiento;
+  TextEditingController _controllerLugarResidencia;
+  TextEditingController _controllerFechaNacimiento;
+  TextEditingController _controllerOcupacion;
+  TextEditingController _controllerColegio;
+  TextEditingController _controllerFechaMatrimonio;
+  
 
- TextEditingController _controllerNombre = new TextEditingController();
-  TextEditingController _controllerEdad= new TextEditingController();
-  TextEditingController _controllerDireccion= new TextEditingController();
-  TextEditingController _controllerPaisNacimiento= new TextEditingController();
-  TextEditingController _controllerCiudadNacimiento= new TextEditingController();
-  TextEditingController _controllerLugarResidencia= new TextEditingController();
-  TextEditingController _controllerFechaNacimiento= new TextEditingController();
-  TextEditingController _controllerOcupacion= new TextEditingController();
-  TextEditingController _controllerColegio= new TextEditingController();
-  TextEditingController _controllerFechaMatrimonio= new TextEditingController();
+
+
 
   List<personModel> person =[];
   List<Widget> labelList = [];
 
   void initState() {
     super.initState();
-    _buildLabels(null);
+   // _getUserInfo();
+    
   }
   @override
   Widget build(BuildContext context) {
@@ -99,7 +104,6 @@ class _RegistroHVState extends State<RegistroHV> {
                 style: new TextStyle(fontSize: 18.0),)
               ),
               new TextField(
-                controller: _controllerNombre,
                 decoration: new InputDecoration(
                   hintText: "Escribe el nombre del paciente"
                 ),
@@ -107,7 +111,9 @@ class _RegistroHVState extends State<RegistroHV> {
                   setState(() {
                     nombre =  str;
                   });
-                }
+                },
+                controller:_controllerNombre
+
               ),
               new Container(
                 padding: new EdgeInsets.only(top: 20.0),
@@ -115,7 +121,6 @@ class _RegistroHVState extends State<RegistroHV> {
                 style: new TextStyle(fontSize: 18.0),)
               ),
               new TextField(
-                controller: _controllerEdad,
                 decoration: new InputDecoration(
                     hintText:"Escribe la edad del paciente"
                 ),
@@ -123,7 +128,8 @@ class _RegistroHVState extends State<RegistroHV> {
                  setState(() {
                    edad = str;
                  });
-               }
+               },
+               controller: _controllerEdad,
               ),
               new Container(
                   padding: new EdgeInsets.only(top: 20.0),
@@ -148,6 +154,7 @@ class _RegistroHVState extends State<RegistroHV> {
                         return new DropdownMenuItem<String>(
                           value: value,
                           child: new Text(value),
+                          
                         );
                       }).toList())),
 
@@ -157,7 +164,6 @@ class _RegistroHVState extends State<RegistroHV> {
                     style: new TextStyle(fontSize: 18.0),)
               ),
               new TextField(
-                controller: _controllerDireccion,
                   decoration: new InputDecoration(
                       hintText:"Escribe la dirección del paciente"
                   ),
@@ -165,7 +171,8 @@ class _RegistroHVState extends State<RegistroHV> {
                     setState(() {
                       direccion = str;
                     });
-                  }
+                  },
+                  controller: _controllerDireccion,
               ),
               new Container(
                   padding: new EdgeInsets.only(top: 20.0),
@@ -173,7 +180,6 @@ class _RegistroHVState extends State<RegistroHV> {
                     style: new TextStyle(fontSize: 18.0),)
               ),
               new TextField(
-                controller: _controllerPaisNacimiento,
                   decoration: new InputDecoration(
                       hintText:"Escribe el pais de nacimiento del paciente"
                   ),
@@ -181,7 +187,8 @@ class _RegistroHVState extends State<RegistroHV> {
                     setState(() {
                       paisNacimiento = str;
                     });
-                  }
+                  },
+                  controller: _controllerPaisNacimiento,
               ),
               new Container(
                   padding: new EdgeInsets.only(top: 20.0),
@@ -189,7 +196,6 @@ class _RegistroHVState extends State<RegistroHV> {
                     style: new TextStyle(fontSize: 18.0),)
               ),
               new TextField(
-                controller: _controllerCiudadNacimiento,
                   decoration: new InputDecoration(
                       hintText:"Escribe la ciudad de nacimiento del paciente"
                   ),
@@ -197,7 +203,8 @@ class _RegistroHVState extends State<RegistroHV> {
                     setState(() {
                       ciudadNacimiento = str;
                     });
-                  }
+                  },
+                  controller: _controllerCiudadNacimiento,
               ),
 
               new Container(
@@ -206,7 +213,6 @@ class _RegistroHVState extends State<RegistroHV> {
                     style: new TextStyle(fontSize: 18.0),)
               ),
               new TextField(
-                controller: _controllerLugarResidencia,
                   decoration: new InputDecoration(
                       hintText:"Escribe el lugar de residencia del paciente"
                   ),
@@ -214,7 +220,8 @@ class _RegistroHVState extends State<RegistroHV> {
                     setState(() {
                       lugarResidencia = str;
                     });
-                  }
+                  },
+                  controller: _controllerLugarResidencia,
               ),
 
 
@@ -224,7 +231,6 @@ class _RegistroHVState extends State<RegistroHV> {
                     style: new TextStyle(fontSize: 18.0),)
               ),
               new TextField(
-                  controller: _controllerFechaNacimiento,
                   decoration: new InputDecoration(
                       hintText:"Escribe la fecha de nacimiento del paciente"
                   ),
@@ -232,7 +238,8 @@ class _RegistroHVState extends State<RegistroHV> {
                     setState(() {
                       fechaNacimiento = str;
                     });
-                  }
+                  },
+                  controller: _controllerFechaNacimiento,
               ),
               new Container(
                   padding: new EdgeInsets.only(top: 20.0),
@@ -240,7 +247,6 @@ class _RegistroHVState extends State<RegistroHV> {
                     style: new TextStyle(fontSize: 18.0),)
               ),
               new TextField(
-                controller: _controllerOcupacion,
                   decoration: new InputDecoration(
                       hintText:"Escribe la ocupación principal del paciente"
                   ),
@@ -248,7 +254,8 @@ class _RegistroHVState extends State<RegistroHV> {
                     setState(() {
                       ocupacion = str;
                     });
-                  }
+                  },
+                  controller: _controllerOcupacion,
               ),
 
               new Container(
@@ -283,7 +290,6 @@ class _RegistroHVState extends State<RegistroHV> {
                     style: new TextStyle(fontSize: 18.0),)
               ),
               new TextField(
-                  controller: _controllerColegio,
                   decoration: new InputDecoration(
                       hintText:"Escribe el colegio en el que estudio el paciente"
                   ),
@@ -291,7 +297,8 @@ class _RegistroHVState extends State<RegistroHV> {
                     setState(() {
                       colegio = str;
                     });
-                  }
+                  },
+                  controller: _controllerColegio,
               ),
               new Container(
                   padding: new EdgeInsets.only(top: 20.0),
@@ -325,7 +332,6 @@ class _RegistroHVState extends State<RegistroHV> {
                     style: new TextStyle(fontSize: 18.0),)
               ),
               new TextField(
-                controller: _controllerFechaMatrimonio,
                   decoration: new InputDecoration(
                       hintText:"Escriba la fecha de matrimonio del paciente: DD/MM/AAAA"
                   ),
@@ -333,7 +339,8 @@ class _RegistroHVState extends State<RegistroHV> {
                     setState(() {
                       fechaMatrimonio = str;
                     });
-                  }
+                  },
+                  controller: _controllerFechaMatrimonio,
               ),
               new Container(
                   padding: new EdgeInsets.only(top: 20.0),
@@ -505,7 +512,7 @@ class _RegistroHVState extends State<RegistroHV> {
                   color: new Color(0xFF7E57C2),
                   child: new Text('Enviar', style: new TextStyle(
                       color: Colors.white, fontSize: 18.0)),
-                  onPressed: _createUser,
+                  onPressed: _updateUser,
                 ),
               )
               )
@@ -582,7 +589,7 @@ class _RegistroHVState extends State<RegistroHV> {
     });
   }
 
-   Future<Null> _createUser() async {
+   Future<Null> _updateUser() async {
     try {
       var user = new Map();
       
@@ -621,7 +628,7 @@ class _RegistroHVState extends State<RegistroHV> {
       final String requestBody = json.encode(user);
       print(requestBody);
       HttpClientRequest request =
-          await httpClient.postUrl(Uri.parse(URL + '/users/createUser'))
+          await httpClient.postUrl(Uri.parse(URL + '/users/updateUser'))
             ..headers.add(HttpHeaders.ACCEPT, ContentType.JSON)
             ..headers.contentType = ContentType.JSON
             ..headers.contentLength = requestBody.length
@@ -632,6 +639,87 @@ class _RegistroHVState extends State<RegistroHV> {
           .decode(await response.transform(utf8.decoder).join())['nombre']);
       Navigator.of(context).pushReplacement(new MaterialPageRoute(
           builder: (BuildContext context) => new MyTabs(widget.googleId)));
+    } catch (err) {
+      print(err);
+    }
+  }
+
+
+   Future<Null> _getUserInfo() async {
+    try {
+      var user = new Map();
+      
+      user["google_id"] = widget.googleId;
+
+      final String requestBody = json.encode(user);
+      print(requestBody);
+      HttpClientRequest request =
+          await httpClient.getUrl(Uri.parse(URL + '/users/getUserInfo'))
+            ..headers.add(HttpHeaders.ACCEPT, ContentType.JSON)
+            ..headers.contentType = ContentType.JSON
+            ..headers.contentLength = requestBody.length
+            ..headers.chunkedTransferEncoding = false;
+       request.write(requestBody);
+      HttpClientResponse response = await request.close();
+      nuevoMapa = json
+          .decode(await response.transform(utf8.decoder).join());
+        print("este es el mapa");
+        print(nuevoMapa);
+      
+      setState(() {
+
+              nombre = nuevoMapa['nombre'];
+              edad = nuevoMapa['edad'];
+              genero = nuevoMapa['genero'];
+              direccion = nuevoMapa['direccion'];
+              fechaNacimiento = nuevoMapa['fecha_nacimiento'];
+              paisNacimiento = nuevoMapa['pais_nacimiento'];
+              ciudadNacimiento = nuevoMapa['ciudad_nacimiento'];
+              ocupacion = nuevoMapa['ocupacion_principal'];
+              escolaridad = nuevoMapa['escolaridad'];
+              colegio = nuevoMapa['colegio'];
+              estadoCivil = nuevoMapa['estado_civil'];
+              pasatiempo = nuevoMapa['pasatiempo'];
+              generoMusical = nuevoMapa['genero_musical'];
+              lugarResidencia = nuevoMapa['lugar_residencia'];
+              capacidadFisica = nuevoMapa['capacidad_fisica'];
+              capacidadCaminar = nuevoMapa['capacidad_caminar'];
+              fechaMatrimonio = nuevoMapa['fecha_matrimonio'];
+
+              _controllerNombre = new TextEditingController(text : nombre);
+              _controllerEdad = new TextEditingController(text : edad);
+              _controllerDireccion = new TextEditingController(text : direccion);
+              _controllerPaisNacimiento = new TextEditingController(text : paisNacimiento);
+              _controllerCiudadNacimiento = new TextEditingController(text : ciudadNacimiento);
+              _controllerLugarResidencia = new TextEditingController(text : lugarResidencia);
+              _controllerFechaNacimiento = new TextEditingController(text : fechaNacimiento);
+              _controllerOcupacion = new TextEditingController(text : ocupacion);
+              _controllerColegio = new TextEditingController(text : colegio);
+              _controllerFechaMatrimonio = new TextEditingController(text : fechaMatrimonio);
+
+
+            // if ( nuevoMapa['familiares'] != null){
+
+                  for(int i = 0; i <nuevoMapa['familiares'].length;i++ ){
+                person.add(new personModel(nuevoMapa["familiares"][i]['nombre'], nuevoMapa["familiares"][i]['parentesco']));
+              }
+              print(nuevoMapa['familiares'].length);
+              print(nuevoMapa["familiares"][0]['nombre']);
+
+             // }
+              
+             
+              
+  
+
+
+              
+
+              _buildLabels(null);
+
+
+            }); 
+     
     } catch (err) {
       print(err);
     }
