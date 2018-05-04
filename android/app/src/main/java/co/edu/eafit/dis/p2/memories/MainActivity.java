@@ -1,6 +1,5 @@
 package co.edu.eafit.dis.p2.memories;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,9 +24,6 @@ import java.util.Locale;
 import java.util.StringTokenizer;
 
 import io.flutter.app.FlutterActivity;
-import io.flutter.plugin.common.EventChannel;
-import io.flutter.plugin.common.EventChannel.StreamHandler;
-import io.flutter.plugin.common.EventChannel.EventSink;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -305,7 +301,6 @@ public class MainActivity extends FlutterActivity implements TextToSpeech.OnInit
      */
 
     private static final String CHANNEL = "co.edu.eafit.dis.p2.memories";
-    private static final String CHANNEL_EVENT = "co.edu.eafit.dis.p2.memories/event";
     Locale locSpanish = new Locale("spa", "CO");
 
     @Override
@@ -316,18 +311,6 @@ public class MainActivity extends FlutterActivity implements TextToSpeech.OnInit
         myTTS = new TextToSpeech(this, this);
         myTTS.setLanguage(locSpanish);
         GeneratedPluginRegistrant.registerWith(this);
-        new EventChannel(getFlutterView(), CHANNEL_EVENT).setStreamHandler(
-                new StreamHandler() {
-                    @Override
-                    public void onListen(Object o, EventSink eventSink) {
-                    }
-
-                    @Override
-                    public void onCancel(Object o) {
-
-                    }
-                }
-        );
         new MethodChannel(getFlutterView(), CHANNEL).setMethodCallHandler(
                 new MethodCallHandler() {
                     @Override
@@ -490,9 +473,6 @@ public class MainActivity extends FlutterActivity implements TextToSpeech.OnInit
 
         @Override
         protected String doInBackground(Void... params) {
-/*            HttpClient httpclient = HttpClients.createDefault();
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);*/
 
 
             try {
@@ -512,17 +492,6 @@ public class MainActivity extends FlutterActivity implements TextToSpeech.OnInit
                 Log.e("APIII", response.body().string());
                 return response.body().string();
 
-               /* URI uri = builder.build();
-                HttpPost request = new HttpPost(uri);
-                request.setHeader("Content-Type", "application/octet-stream");
-                request.setHeader("Ocp-Apim-Subscription-Key", "0f9ebeaedb9f495c80fde9a845241dc1");
-                // Request body. The parameter of setEntity converts the image to base64
-                request.setEntity(new ByteArrayEntity(toBase64(path)));
-                // getting a response and assigning it to the string res
-                HttpResponse response = httpclient.execute(request);
-                HttpEntity entity = response.getEntity();
-                return EntityUtils.toString(entity);*/
-
             } catch (Exception e) {
                 return "null";
             }
@@ -534,10 +503,8 @@ public class MainActivity extends FlutterActivity implements TextToSpeech.OnInit
 
             JSONArray jsonArray = null;
             try {
-                // convert the string to JSONArray
                 jsonArray = new JSONArray(result);
                 String emotions = "";
-                // get the scores object from the results
                 for (int i = 0; i < jsonArray.length() - 1; i++) {
                     JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
                     JSONObject scores = jsonObject.getJSONObject("scores");

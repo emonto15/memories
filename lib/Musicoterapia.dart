@@ -1,8 +1,8 @@
-import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:memories/UI/control_Button.dart';
+import 'package:memories/Constants.dart';
 
 class Musicoterapia extends StatefulWidget {
   @override
@@ -10,18 +10,14 @@ class Musicoterapia extends StatefulWidget {
 }
 
 class MusicoterapiaState extends State<Musicoterapia> {
-  final MethodChannel _channel = MethodChannel('co.edu.eafit.dis.p2.memories');
-  final EventChannel stream =
-      EventChannel('co.edu.eafit.dis.p2.memories/event');
-  StreamSubscription _metadataSubscription = null;
+  final MethodChannel _channel = new MethodChannel('co.edu.eafit.dis.p2.memories');
   bool playing = false;
   bool firstPlay = true;
   String song;
   String token;
   String _songName = '----';
   String _songArtist = '----';
-  String _songArt =
-      'http://backgroundcheckall.com/wp-content/uploads/2017/12/spotify-logo-transparent-background-1.png';
+  String _songArt = SPOTIFY_ART;
 
   void getToken() async {
     String a = await _channel.invokeMethod('spotifyGetToken');
@@ -30,37 +26,16 @@ class MusicoterapiaState extends State<Musicoterapia> {
     });
   }
 
-  void _enableChannel() {
-    if (_metadataSubscription == null) {
-      _metadataSubscription =
-          stream.receiveBroadcastStream().listen(_updateMetadata);
-    }
-  }
-
-  void _disableChannel() {
-    if (_metadataSubscription != null) {
-      _metadataSubscription.cancel();
-      _metadataSubscription = null;
-    }
-  }
-
-  void _updateMetadata(metadata) {
-    debugPrint("Timer $metadata");
-  }
-
   @override
   void initState() {
     super.initState();
-    logging();
     getToken();
 
-    _enableChannel();
   }
 
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
-    final double screenHeigth = MediaQuery.of(context).size.height;
     return new MediaQuery(
         data: new MediaQueryData(),
         child: new Directionality(
@@ -117,23 +92,11 @@ class MusicoterapiaState extends State<Musicoterapia> {
                 ])));
   }
 
-  void logging() async {
-    String a = await _channel.invokeMethod('spotifyLogin');
-    String token1 = await _channel.invokeMethod('spotifyGetToken');
-    setState(() {
-      print(token1);
-      token = token1;
-    });
-  }
-
   void play() async {
     print(token);
-    print("JOCO");
 
     String response = await _channel
         .invokeMethod('spotifyPlay', <String, dynamic>{"isFirstPlay": firstPlay});
-    print(response);
-    print("DAMI");
     List<String> song = response.split(",");
     setState(() {
       firstPlay = false;
@@ -167,9 +130,7 @@ class MusicoterapiaState extends State<Musicoterapia> {
   }
 
   void stop() async {
-    print("CALLESE");
     await _channel.invokeMethod('spotifyPause');
-    print("ELQUE");
     setState(() {
       playing = false;
     });
