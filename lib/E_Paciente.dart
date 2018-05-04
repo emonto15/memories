@@ -71,12 +71,6 @@ class _ExamenPaciente extends State<ExamenPaciente> {
     '6',
     '7',
     '8',
-    '3',
-    '4',
-    '5',
-    '6',
-    '7',
-    '8',
     '9',
     '10',
     '11',
@@ -151,64 +145,63 @@ class _ExamenPaciente extends State<ExamenPaciente> {
 
 
   void _handleSubmitted() {
-    int memoryScore, judgeScore, orientationScore;
-    memoryScore = 0; judgeScore = 0; orientationScore = 0;
+    double memoryScore, judgeScore, orientationScore;
+    memoryScore = 0.0; judgeScore = 0.0; orientationScore = 0.0;
     //Memory Checks
     if(birth_fromDate.toIso8601String().split("T")[0] == fechaNacimiento.split('T')[0]){
-      memoryScore+=1;
+      memoryScore-=0.6;
     }
     if(_department == departamentoNacimieno){
-      memoryScore+=1;
+      memoryScore-=0.6;
     }
     if(_city == ciudadNacimiento){
-      memoryScore+=1;
+      memoryScore-=0.6;
     }
     if(_colegio == colegio){
-      memoryScore+=1;
+      memoryScore-=0.6;
     }
     if(_ocupacion == ocupacionPrincipal){
-      memoryScore+=1;
+      memoryScore-=0.6;
     }
-    //OrientationChecks
+    //judge Checks
     if(actual_fromDate.toIso8601String().split("T")[0] == new DateTime.now().toIso8601String().split("T")[0]){
-      judgeScore+=1;
+      judgeScore-=0.6;
     }
     if(_weekDay == weekDay(new DateTime.now().weekday)){
-      judgeScore+=1;
+      judgeScore-=0.6;
     }
-    if(_monthOfYear == weekDay(new DateTime.now().month)){
-      judgeScore+=1;
+    if(_monthOfYear == month(new DateTime.now().month)){
+      judgeScore-=0.6;
     }
     if(_year == new DateTime.now().year.toString()){
-      judgeScore+=1;
+      judgeScore-=0.6;
     }
     if(_town == new DateTime.now().day.toString()){
-      judgeScore+=1;
+      judgeScore-=0.6;
     }
-    //JudgeChecks
+    //OrientationChecks
     if(_milesDePesos == "1000"){
-      orientationScore+=1;
+      orientationScore-=0.6;
     }
     if(_monedasDe50 == "27"){
-      orientationScore+=1;
+      orientationScore-=0.6;
     }
     if(_restarle == "20"){
-      orientationScore+=1;
+      orientationScore-=0.6;
     }
-    if(_contructionElement == "Flecha"){
-      orientationScore+=1;
+    if(_contructionElement == _constructionElements[3]){
+      orientationScore-=0.6;
     }
-    if(_beachElement == "Vestido de baño"){
-      orientationScore+=1;
+    if(_beachElement == _beachElements[3]){
+      orientationScore-=0.6;
     }
 
-
-    print("memoryScore"+ memoryScore.toString());
-    print("judgeScore"+judgeScore.toString());
-    print("orientationScore"+orientationScore.toString());
+    memoryScore = memoryScore + 3;
+    judgeScore = judgeScore +3;
+    orientationScore = orientationScore +3;
 
     Navigator.of(context).push(new MaterialPageRoute(
-        builder: (BuildContext context) => new informante.ExamenInformante()));
+        builder: (BuildContext context) => new informante.ExamenInformante(widget.googleId,memoryScore,judgeScore,orientationScore)));
   }
 
   void initState() {
@@ -228,15 +221,15 @@ class _ExamenPaciente extends State<ExamenPaciente> {
   }
 
   String month(int i){
-    if(i==1){return _monthsOfYear[0];}
-    if(i==2){return _monthsOfYear[1];}
-    if(i==3){return _monthsOfYear[2];}
-    if(i==4){return _monthsOfYear[3];}
-    if(i==5){return _monthsOfYear[4];}
-    if(i==6){return _monthsOfYear[5];}
-    if(i==7){return _monthsOfYear[6];}
-    if(i==8){return _monthsOfYear[7];}
-    if(i==9){return _monthsOfYear[8];}
+    if(i==01){return _monthsOfYear[0];}
+    if(i==02){return _monthsOfYear[1];}
+    if(i==03){return _monthsOfYear[2];}
+    if(i==04){return _monthsOfYear[3];}
+    if(i==05){return _monthsOfYear[4];}
+    if(i==06){return _monthsOfYear[5];}
+    if(i==07){return _monthsOfYear[6];}
+    if(i==08){return _monthsOfYear[7];}
+    if(i==09){return _monthsOfYear[8];}
     if(i==10){return _monthsOfYear[9];}
     if(i==11){return _monthsOfYear[10];}
     if(i==12){return _monthsOfYear[11];}

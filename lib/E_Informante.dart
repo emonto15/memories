@@ -1,6 +1,18 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:memories/Constants.dart';
+import 'package:memories/main.dart';
 
 class ExamenInformante extends StatefulWidget {
+  final double pacientMemoryScore;
+  final double pacientJudgeScore;
+  final double pacientOrientationScore;
+  final String googleId;
+
+  ExamenInformante(this.googleId,this.pacientMemoryScore,this.pacientJudgeScore,this.pacientOrientationScore);
   @override
   _ExamenInformanteState createState() => new _ExamenInformanteState();
 }
@@ -8,13 +20,13 @@ class ExamenInformante extends StatefulWidget {
 class _ExamenInformanteState extends State<ExamenInformante> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
+
   void showInSnackBar(String value) {
     _scaffoldKey.currentState.showSnackBar(
         new SnackBar(content: new Text(value)));
   }
 
   void _handleSubmitted() {
-    print("mk aqui da");
    if (_1m == null || _2m == null || _3m == null ||_4m == null || _5m == null || _6m == null || _7m == null ||_8m == null ||_1o == null || _2o == null || _3o == null || _4o == null || _5o == null || _6o == null || _7o == null || _8o == null || _1j == null || _2j == null || _3j == null || _4j == null || _5j == null || _6j == null) {
       showInSnackBar('Porfavor rellene todos los datos');
     } else {
@@ -35,16 +47,48 @@ class _ExamenInformanteState extends State<ExamenInformante> {
       double orientationScore= 3 - (sumOrientationScore/8);
       double judgeScore= 3 - (sumJudgeScore/6);
 
-      double totalScore = (memoryScore+orientationScore+judgeScore)/3;
-
-      showInSnackBar("memoryScore: " + memoryScore.toString()+ "\n"+
-          "JudgeScore: " +judgeScore.toString()+ "\n"+
-          "orientationScore: " +orientationScore.toString()+ "\n"+
-          "total: " +totalScore.toString()+ "\n"
-      );
-      //showInSnackBar('Se han enviado los datos correctamente.');
+      double totalScore = (memoryScore+orientationScore+judgeScore+widget.pacientMemoryScore+widget.pacientOrientationScore+widget.pacientJudgeScore)/6;
+      sendData(totalScore, memoryScore, judgeScore, orientationScore);
     }
   }
+
+  Future<Null> sendData(totalscore,memory,judge,orientation) async {
+    try {
+      var test = {
+        "fecha": new DateTime.now().toIso8601String(),
+        "global": totalscore,
+        "google_id": widget.googleId,
+        "paciente": {
+          "memoria": widget.pacientMemoryScore,
+          "orientacion": widget.pacientOrientationScore,
+          "juicio": widget.pacientJudgeScore
+        },
+        "informante":{
+          "memoria": memory,
+          "orientacion": orientation,
+          "juicio": judge
+        }
+      };
+      var httpClient = new HttpClient();
+      final String requestBody = json.encode(test);
+      print(requestBody);
+      HttpClientRequest request =
+      await httpClient.postUrl(Uri.parse(URL + '/users/test'))
+        ..headers.add(HttpHeaders.ACCEPT, ContentType.JSON)
+        ..headers.contentType = ContentType.JSON
+        ..headers.contentLength = requestBody.length
+        ..headers.chunkedTransferEncoding = false;
+      request.write(requestBody);
+      HttpClientResponse response = await request.close();
+      showInSnackBar('Se han enviado los datos correctamente.');
+      sleep(new Duration(seconds: 1));
+      Navigator.of(context).pushReplacement(new MaterialPageRoute(
+          builder: (BuildContext context) => new MyTabs(widget.googleId)));
+    } catch (err) {
+      print(err);
+    }
+  }
+
 
   int getScore(String value) {
     if (value == null){
