@@ -529,16 +529,16 @@ class _RegistroHVState extends State<RegistroHV> {
                 child: new Column(children: labelList),
               ),
               new Container(
-                  padding: new EdgeInsets.all(20.0),
-                  child: new Center(
-                    child: new RaisedButton(
-                      color: new Color(0xFF7E57C2),
-                      child: new Text('Enviar',
-                          style: new TextStyle(
-                              color: Colors.white, fontSize: 18.0)),
-                      onPressed: _createUser,
-                    ),
-                  ))
+                  padding: new EdgeInsets.all(20.0), child: new Center(
+                child: new RaisedButton(
+                  color: new Color(0xFF7E57C2),
+                  child: new Text('Enviar', style: new TextStyle(
+                      color: Colors.white, fontSize: 18.0)),
+                  onPressed: createUser,
+                ),
+              )
+              )
+
             ],
           ),
         ),
@@ -601,7 +601,25 @@ class _RegistroHVState extends State<RegistroHV> {
     });
   }
 
-  Future<Null> _createUser() async {
+  createUser(){
+    if(_controllerNombre.text.isNotEmpty && _controllerEdad.text.isNotEmpty && genero!=null 
+    && _controllerDireccion.text.isNotEmpty && departamentoNacimiento != null
+     && ciudadNacimiento != null && _controllerOcupacion.text.isNotEmpty 
+     && escolaridad != null && _controllerColegio.text.isNotEmpty && estadoCivil != null
+     && pasatiempo != null && generoMusical != null && _controllerLugarResidencia.text.isNotEmpty 
+     && capacidadFisica != null && capacidadCaminar != null){
+      _createUser();
+
+     }else{
+        _scaffoldKey.currentState.showSnackBar(
+            new SnackBar(
+              content: new Text('Hay campos sin rellenar'),
+            )
+        );
+     }
+  }
+
+   Future<Null> _createUser() async {
     try {
       var user = new Map();
 

@@ -87,6 +87,8 @@ var nuevoMapa = new Map();
 final List<String> _parentesco = <String>['Padre', 'Madre', 'Hijo'];
 
 class _EditarPerfilState extends State<EditarPerfil> {
+
+  
   var httpClient = new HttpClient();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final TextEditingController _controller = new TextEditingController();
@@ -530,16 +532,16 @@ class _EditarPerfilState extends State<EditarPerfil> {
                 child: new Column(children: labelList),
               ),
               new Container(
-                  padding: new EdgeInsets.all(20.0),
-                  child: new Center(
-                    child: new RaisedButton(
-                      color: new Color(0xFF7E57C2),
-                      child: new Text('Enviar',
-                          style: new TextStyle(
-                              color: Colors.white, fontSize: 18.0)),
-                      onPressed: _updateUser,
-                    ),
-                  ))
+                  padding: new EdgeInsets.all(20.0), child: new Center(
+                child: new RaisedButton(
+                  color: new Color(0xFF7E57C2),
+                  child: new Text('Enviar', style: new TextStyle(
+                      color: Colors.white, fontSize: 18.0)),
+                  onPressed: updateUser,
+                ),
+              )
+              )
+
             ],
           ),
         ),
@@ -602,7 +604,26 @@ class _EditarPerfilState extends State<EditarPerfil> {
     });
   }
 
-  Future<Null> _updateUser() async {
+
+  updateUser(){
+    if(_controllerNombre.text.isNotEmpty && _controllerEdad.text.isNotEmpty && genero!=null 
+    && _controllerDireccion.text.isNotEmpty && departamentoNacimiento != null
+     && ciudadNacimiento != null && _controllerOcupacion.text.isNotEmpty 
+     && escolaridad != null && _controllerColegio.text.isNotEmpty && estadoCivil != null
+     && pasatiempo != null && generoMusical != null && _controllerLugarResidencia.text.isNotEmpty 
+     && capacidadFisica != null && capacidadCaminar != null){
+      _updateUser();
+
+     }else{
+        _scaffoldKey.currentState.showSnackBar(
+            new SnackBar(
+              content: new Text('Hay campos sin rellenar'),
+            )
+        );
+     }
+  }
+
+   Future<Null> _updateUser() async {
     try {
       var user = new Map();
 
