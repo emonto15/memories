@@ -12,7 +12,9 @@ class ExamenInformante extends StatefulWidget {
   final double pacientOrientationScore;
   final String googleId;
 
-  ExamenInformante(this.googleId,this.pacientMemoryScore,this.pacientJudgeScore,this.pacientOrientationScore);
+  ExamenInformante(this.googleId, this.pacientMemoryScore,
+      this.pacientJudgeScore, this.pacientOrientationScore);
+
   @override
   _ExamenInformanteState createState() => new _ExamenInformanteState();
 }
@@ -27,47 +29,68 @@ class _ExamenInformanteState extends State<ExamenInformante> {
   }
 
   void _handleSubmitted() {
-   if (_1m == null || _2m == null || _3m == null ||_4m == null || _5m == null || _6m == null || _7m == null ||_8m == null ||_1o == null || _2o == null || _3o == null || _4o == null || _5o == null || _6o == null || _7o == null || _8o == null || _1j == null || _2j == null || _3j == null || _4j == null || _5j == null || _6j == null) {
+    if (_1m == null || _2m == null || _3m == null || _4m == null ||
+        _5m == null || _6m == null || _7m == null || _8m == null ||
+        _1o == null || _2o == null || _3o == null || _4o == null ||
+        _5o == null || _6o == null || _7o == null || _8o == null ||
+        _1j == null || _2j == null || _3j == null || _4j == null ||
+        _5j == null || _6j == null) {
       showInSnackBar('Porfavor rellene todos los datos');
     } else {
-      int sumMemoryScore= 0, sumJudgeScore = 0, sumOrientationScore = 0, globalScore = 0;
-      var memoryAnswers = [this._1m,this._2m,this._3m,this._4m,this._5m,this._6m,this._7m,this._8m];
-      var judgeAnswers = [this._1j,this._2j,this._3j,this._4j,this._5j,this._6j];
-      var orientationAnswers = [this._1o,this._2o,this._3o,this._4o,this._5o,this._6o,this._7o,this._8o];
-      for(int i = 0; i<memoryAnswers.length; i++){
+      int sumMemoryScore = 0,
+          sumJudgeScore = 0,
+          sumOrientationScore = 0,
+          globalScore = 0;
+      var memoryAnswers = [
+        this._1m,
+        this._2m,
+        this._3m,
+        this._4m,
+        this._5m,
+        this._6m,
+        this._7m,
+        this._8m
+      ];
+      var judgeAnswers = [
+        this._1j, this._2j, this._3j, this._4j, this._5j, this._6j];
+      var orientationAnswers = [
+        this._1o,
+        this._2o,
+        this._3o,
+        this._4o,
+        this._5o,
+        this._6o,
+        this._7o,
+        this._8o
+      ];
+      for (int i = 0; i < memoryAnswers.length; i++) {
         sumMemoryScore = sumMemoryScore + getScore(memoryAnswers[i]);
-        sumOrientationScore = sumOrientationScore + getScore(orientationAnswers[i]);
+        sumOrientationScore =
+            sumOrientationScore + getScore(orientationAnswers[i]);
       }
-      for(int i = 0; i<judgeAnswers.length; i++){
+      for (int i = 0; i < judgeAnswers.length; i++) {
         sumJudgeScore = sumJudgeScore + getScore(judgeAnswers[i]);
       }
-      globalScore = sumOrientationScore + sumJudgeScore + sumMemoryScore;
 
-      double memoryScore= 3 - (sumMemoryScore/8);
-      double orientationScore= 3 - (sumOrientationScore/8);
-      double judgeScore= 3 - (sumJudgeScore/6);
+      double memoryScore = 3 - (sumMemoryScore / 8);
+      double orientationScore = 3 - (sumOrientationScore / 8);
+      double judgeScore = 3 - (sumJudgeScore / 6);
 
-      double totalScore = (memoryScore+orientationScore+judgeScore+widget.pacientMemoryScore+widget.pacientOrientationScore+widget.pacientJudgeScore)/6;
+      double totalScore = (memoryScore + orientationScore + judgeScore +
+          widget.pacientMemoryScore + widget.pacientOrientationScore +
+          widget.pacientJudgeScore) / 6;
       sendData(totalScore, memoryScore, judgeScore, orientationScore);
     }
   }
 
-  Future<Null> sendData(totalscore,memory,judge,orientation) async {
+  Future<Null> sendData(totalscore, memory, judge, orientation) async {
     try {
       var test = {
         "fecha": new DateTime.now().toIso8601String(),
-        "global": totalscore,
         "google_id": widget.googleId,
-        "paciente": {
-          "memoria": widget.pacientMemoryScore,
-          "orientacion": widget.pacientOrientationScore,
-          "juicio": widget.pacientJudgeScore
-        },
-        "informante":{
-          "memoria": memory,
-          "orientacion": orientation,
-          "juicio": judge
-        }
+        "memoria": (widget.pacientMemoryScore + memory )/2,
+        "orientacion": (widget.pacientOrientationScore + orientation)/2,
+        "juicio": (widget.pacientJudgeScore + judge)/2
       };
       var httpClient = new HttpClient();
       final String requestBody = json.encode(test);
@@ -91,9 +114,9 @@ class _ExamenInformanteState extends State<ExamenInformante> {
 
 
   int getScore(String value) {
-    if (value == null){
-        return 0;
-    }else {
+    if (value == null) {
+      return 0;
+    } else {
       if (value.contains("Generalmente")) {
         return 3;
       }
