@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:memories/Perfil.dart' as perfil;
 import 'package:memories/Examen_Landing_page.dart' as examen;
-import 'package:memories/Reportes.dart' as reportes;
 import 'package:memories/Activities_Landing_page.dart' as landingActivities;
 import 'package:memories/Musicoterapia.dart';
 import 'dart:async';
+import 'package:memories/Reporte.dart' as reportes;
 import 'package:memories/login.dart';
 
 Future<Null> main() async {
@@ -71,7 +71,7 @@ class MyTabsState extends State<MyTabs> with SingleTickerProviderStateMixin {
               new examen.LandingPage(widget.googleId),
               new landingActivities.LandingPage(widget.googleId),
               new Musicoterapia(),
-              new reportes.Report()
+              new reportes.Reporte(widget.googleId)
             ]
         )
     );
