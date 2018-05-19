@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:memories/main.dart';
 import 'package:memories/Constants.dart';
@@ -14,6 +15,8 @@ class LoginPage extends StatefulWidget {
 
 class LoginPageState extends State<LoginPage>
     with SingleTickerProviderStateMixin {
+  final MethodChannel _channel = new MethodChannel('co.edu.eafit.dis.p2.memories');
+
   var httpClient = new HttpClient();
   GoogleSignIn _googleSignIn = new GoogleSignIn(
     scopes: [
@@ -151,6 +154,8 @@ class LoginPageState extends State<LoginPage>
             ..headers.chunkedTransferEncoding = false;
       request.write(requestBody);
       HttpClientResponse response = await request.close();
+      String spotify = await _channel.invokeMethod('spotifyLogin');
+      print(spotify);
       if (json.decode(
               await response.transform(utf8.decoder).join())['registrado'] !=
           false) {

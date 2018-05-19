@@ -345,10 +345,8 @@ public class MainActivity extends FlutterActivity implements TextToSpeech.OnInit
                                 Boolean isPlaying = call.argument("isFirstPlay");
                                 if (isPlaying) {
                                     play();
-                                    Log.d("SPOTIFY", "MY VERY FIRST TIME");
                                 } else {
                                     resume();
-                                    Log.d("SPOTIFY", "Not virgin");
                                 }
                                 if (!actualSong.equals("")) {
                                     result.success(actualSong);
