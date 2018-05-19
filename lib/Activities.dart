@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:clock/clock.dart' as clock;
-import 'package:memories/tts.dart';
 import 'package:collection/collection.dart';
 
 import './utils/question.dart';
@@ -20,10 +19,9 @@ import './Score_page.dart';
 
 class QuizPage extends StatefulWidget {
   final List<CameraDescription> cameras;
-  
+  final String googleId = "";
 
-  QuizPage({this.cameras, this.googleId});
-  String googleId ="";
+  QuizPage({this.cameras,googleId});
 
   @override
   State createState() => new QuizPageState(cameras: cameras);
