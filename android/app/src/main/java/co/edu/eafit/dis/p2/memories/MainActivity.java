@@ -22,6 +22,7 @@ import java.io.File;
 
 import java.util.Locale;
 import java.util.StringTokenizer;
+import java.util.concurrent.ExecutionException;
 
 import io.flutter.app.FlutterActivity;
 import io.flutter.plugin.common.MethodCall;
@@ -317,8 +318,8 @@ public class MainActivity extends FlutterActivity implements TextToSpeech.OnInit
                     public void onMethodCall(MethodCall call, Result result) {
                         switch (call.method) {
                             case "sendEmotion":
-                                sendEmotion((String) call.argument("path"));
-                                result.success("success");
+                                String a = sendEmotion((String) call.argument("path"));
+                                result.success(a);
 
                                 break;
                             case "speak":
@@ -431,8 +432,8 @@ public class MainActivity extends FlutterActivity implements TextToSpeech.OnInit
     }
 
 
-    private void sendEmotion(String path) {
-        getEmotion(path);
+    private String sendEmotion(String path) {
+        return(getEmotion(path));
     }
 
     public static byte[] toBase64(String filePath) {
@@ -449,10 +450,18 @@ public class MainActivity extends FlutterActivity implements TextToSpeech.OnInit
 
     }
 
-    public void getEmotion(String path) {
+    public String getEmotion(String path) {
         // run the GetEmotionCall class in the background
         GetEmotionCall emotionCall = new GetEmotionCall(path);
-        emotionCall.execute();
+        try {
+            String a = emotionCall.execute().get();
+            Log.d("CONO",a);
+            return a;
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            Log.d("AQUI NO", "SHUT UP");
+            return "NOO";
+        }
     }
 
 
@@ -471,8 +480,7 @@ public class MainActivity extends FlutterActivity implements TextToSpeech.OnInit
 
         @Override
         protected String doInBackground(Void... params) {
-
-
+            String res = "que pajo";
             try {
                 //URIBuilder builder = new URIBuilder("https://eastus.api.cognitive.microsoft.com/face/v1.0/detect?returnFaceId=true&returnFaceLandmarks=false&returnFaceAttributes=emotion");
                 OkHttpClient httpClient = new OkHttpClient();
@@ -487,11 +495,12 @@ public class MainActivity extends FlutterActivity implements TextToSpeech.OnInit
                 Log.e("Request", request.toString());
                 Call call = httpClient.newCall(request);
                 Response response = call.execute();
+                res = response.body().string();
                 Log.e("APIII", response.body().string());
                 return response.body().string();
 
             } catch (Exception e) {
-                return "null";
+                return res;
             }
 
         }
@@ -520,7 +529,6 @@ public class MainActivity extends FlutterActivity implements TextToSpeech.OnInit
 
 
             } catch (JSONException e) {
-
             }
         }
     }

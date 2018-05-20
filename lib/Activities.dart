@@ -98,8 +98,9 @@ class QuizPageState extends State<QuizPage> {
 
   Future<Null> _sendEmotion(String path) async {
     try {
-      await platform
+      String a = await platform
           .invokeMethod('sendEmotion', <String, dynamic>{"path": path});
+      print("Desde flutter:"+a);
     } on PlatformException catch (e) {
       print("Failed to send emotion: '${e.message}'.");
     }
