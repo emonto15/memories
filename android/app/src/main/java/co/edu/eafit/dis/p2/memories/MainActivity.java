@@ -72,12 +72,12 @@ public class MainActivity extends FlutterActivity implements TextToSpeech.OnInit
 
     private String TOKEN = "";
 
-    private static final String SPOTIFY_URI = "spotify:user:spotify:playlist:37i9dQZF1DXcCT9tm6fRIV";
+    private static final String  SPOTIFY_URI = "spotify:user:spotify:playlist:37i9dQZF1DXcCT9tm6fRIV";
 
     private SpotifyPlayer mPlayer;
 
     private String actualSong = "";
-
+    private long duration = 180000;
     private SharedPreferences sharedPref;
 
     private PlaybackState mCurrentPlaybackState;
@@ -96,6 +96,7 @@ public class MainActivity extends FlutterActivity implements TextToSpeech.OnInit
                 actualSong += mMetadata.currentTrack.name + ",";
                 actualSong += mMetadata.currentTrack.artistName + ",";
                 actualSong += mMetadata.currentTrack.albumCoverWebUrl + ",";
+                duration = mMetadata.currentTrack.durationMs;
             }
 
         }
@@ -176,6 +177,7 @@ public class MainActivity extends FlutterActivity implements TextToSpeech.OnInit
 
                     mPlayer.setPlaybackBitrate(mOperationCallback, PlaybackBitrate.BITRATE_HIGH);
                     mPlayer.setConnectivityStatus(mOperationCallback, getNetworkConnectivity(MainActivity.this));
+                    mPlayer.setShuffle(mOperationCallback,true);
                     mPlayer.addNotificationCallback(MainActivity.this);
                     mPlayer.addConnectionStateCallback(MainActivity.this);
                 }
@@ -338,6 +340,20 @@ public class MainActivity extends FlutterActivity implements TextToSpeech.OnInit
                                 result.success(success);
                                 break;
                             }
+                            case "flush": {
+                                flush();
+                                break;
+                            }
+                            case "distraccion": {
+                                play();
+                                result.success(duration);
+                                break;
+                            }
+                            case "finDistraccion": {
+                                stop();
+                                result.success("success");
+                                break;
+                            }
                             case "spotifyLogin":
                                 login();
                                 result.success(TOKEN);
@@ -398,6 +414,12 @@ public class MainActivity extends FlutterActivity implements TextToSpeech.OnInit
         myTTS.speak(text, TextToSpeech.QUEUE_ADD, null, null);
     }
 
+    void flush() {
+        if(myTTS.isSpeaking()){
+            myTTS.stop();
+        }
+    }
+
     Boolean isLanguageAvailable(String locale) {
         Boolean isAvailable = false;
         try {
@@ -454,7 +476,10 @@ public class MainActivity extends FlutterActivity implements TextToSpeech.OnInit
         // run the GetEmotionCall class in the background
         GetEmotionCall emotionCall = new GetEmotionCall(path);
         try {
-            String a = emotionCall.execute().get();
+            String a;
+             new Thread(
+                     a = emotionCall.execute().get()
+             ).start();
             Log.d("CONO",a);
             return a;
         } catch (InterruptedException | ExecutionException e) {

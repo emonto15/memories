@@ -15,4 +15,6 @@ class Tts {
 
   static void speak(String text) =>
       _channel.invokeMethod('speak', <String, Object>{'text': text});
+
+  static void flush() => _channel.invokeMethod('flush');
 }
