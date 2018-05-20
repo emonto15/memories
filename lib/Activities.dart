@@ -3,7 +3,6 @@ import 'dart:io';
 import 'dart:convert';
 import 'dart:math';
 import 'package:memories/Constants.dart';
-import 'package:intl/intl.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -48,6 +47,7 @@ class QuizPageState extends State<QuizPage> {
   int contBuenasMemoria = 0;
   int contBuenasJuicio = 0;
   int contBuenasOrientacion = 0;
+  var httpClient = new HttpClient();
 
   QuizPageState({this.cameras});
 
@@ -203,7 +203,7 @@ class QuizPageState extends State<QuizPage> {
     countDown();
   }
 
-  void handleAnswer(String answer) {
+  void handleAnswer(String answer) async{
     Tts.flush();
     if (isSad && cdAlert != null) {
       subAlert.cancel();
@@ -317,7 +317,7 @@ class QuizPageState extends State<QuizPage> {
     }
     if (currentQuestion.area == 1) {
       this.contPreguntasMemoria++;
-      if(isCorrect){this.contPreguntasMemoria++;}
+      if(isCorrect){this.contBuenasMemoria++;}
     }
     if (currentQuestion.area == 2) {
       this.contPreguntasOrientacion++;
@@ -328,7 +328,9 @@ class QuizPageState extends State<QuizPage> {
       if(isCorrect){this.contBuenasJuicio++;}
     }
     if(contPreguntasOrientacion+contPreguntasJuicio+contPreguntasMemoria == 10){
-      sendQuizResults();
+      print("NO LE CREO");
+      var a = await sendQuizResults();
+      print(a);
     }
   }
 
@@ -407,14 +409,19 @@ class QuizPageState extends State<QuizPage> {
 
   Future<Null> sendQuizResults() async {
     try {
+      var memoria = (contBuenasMemoria/contPreguntasMemoria);
+      var juicio = (contBuenasJuicio/contPreguntasJuicio);
+      var orientacion = (contBuenasOrientacion/contPreguntasOrientacion);
+      var id = widget.googleId;
+      var fecha = new DateTime.now().toIso8601String();
+
       var test = {
-        "google_id": widget.googleId,
-        "memoria": contBuenasMemoria/contPreguntasMemoria,
-        "juicio":contBuenasJuicio/contPreguntasJuicio,
-        "orientacion":contBuenasOrientacion/contPreguntasOrientacion,
-        "fecha": new DateTime.now()
+        "google_id": id,
+        "memoria": memoria,
+        "juicio": juicio,
+        "orientacion": orientacion,
+        "fecha": fecha
       };
-      var httpClient = new HttpClient();
       final String requestBody = json.encode(test);
       print(requestBody);
       HttpClientRequest request =
@@ -428,7 +435,8 @@ class QuizPageState extends State<QuizPage> {
       print(response);
       print("YA MANDE LA MONDA");
     } catch (err) {
-      print(err);
+      print("PORQUE DANIEL ES UN PELELE");
+      print(err.toString());
     }
   }
 
@@ -471,7 +479,6 @@ class QuizPageState extends State<QuizPage> {
   Future<Null> getQuizQuestions() async {
     try {
       var test = {"google_id": widget.googleId};
-      var httpClient = new HttpClient();
       final String requestBody = json.encode(test);
       print(requestBody);
       HttpClientRequest request =
