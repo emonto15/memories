@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:convert';
 import 'dart:math';
 import 'package:memories/Constants.dart';
-
+import 'package:intl/intl.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -41,6 +41,13 @@ class QuizPageState extends State<QuizPage> {
   StreamSubscription subAlert;
   StreamSubscription subStart;
   StreamSubscription subStop;
+
+  int contPreguntasMemoria = 0;
+  int contPreguntasJuicio = 0;
+  int contPreguntasOrientacion = 0;
+  int contBuenasMemoria = 0;
+  int contBuenasJuicio = 0;
+  int contBuenasOrientacion = 0;
 
   QuizPageState({this.cameras});
 
@@ -106,9 +113,9 @@ class QuizPageState extends State<QuizPage> {
   }
 
   void _dialogAction(bool seguir) {
-    if(seguir){
+    if (seguir) {
       Navigator.pop(context);
-    }else{
+    } else {
       Navigator.pop(context);
       Navigator.of(context).pushReplacement(new MaterialPageRoute(
           builder: (BuildContext context) =>
@@ -140,11 +147,16 @@ class QuizPageState extends State<QuizPage> {
                 style: new TextStyle(fontSize: 20.0)
             ),
             actions: <Widget>[
-              new FlatButton(onPressed: () {_dialogAction(true);}, child: new Text("Si!")),
-              new FlatButton(onPressed: () {_dialogAction(false);}, child: new Text("No"))
+              new FlatButton(onPressed: () {
+                _dialogAction(true);
+              }, child: new Text("Si!")),
+              new FlatButton(onPressed: () {
+                _dialogAction(false);
+              }, child: new Text("No"))
             ],
           );
-          showDialog(context: context, builder: (BuildContext context) => dialog);
+          showDialog(
+              context: context, builder: (BuildContext context) => dialog);
         });
       });
     }
@@ -153,9 +165,23 @@ class QuizPageState extends State<QuizPage> {
   @override
   void initState() {
     super.initState();
+    contPreguntasMemoria = 0;
+    contPreguntasJuicio = 0;
+    contPreguntasOrientacion = 0;
+    contBuenasMemoria = 0;
+    contBuenasJuicio = 0;
+    contBuenasOrientacion = 0;
     getQuizQuestions();
     currentQuestion = new Question(
-        "Cargando...", ["", "", "", ""], "", false, "", false, [], 1, 2);
+        "Cargando...",
+        ["", "", "", ""],
+        "",
+        false,
+        "",
+        false,
+        [],
+        1,
+        2);
     questionText = currentQuestion.question;
     questionNumber = 0;
     hasImage = currentQuestion.hasImage;
@@ -188,6 +214,7 @@ class QuizPageState extends State<QuizPage> {
         subStop.cancel();
       }
     }
+    isCorrect = false;
     if (!currentQuestion.isSequence) {
       capture();
       isCorrect = (currentQuestion.answer == answer);
@@ -207,9 +234,9 @@ class QuizPageState extends State<QuizPage> {
                     " - " +
                     currentQuestion.options[0],
                 currentQuestion.answer,
-                () => handleAnswer(currentQuestion.options[0]));
+                    () => handleAnswer(currentQuestion.options[0]));
             respuestaSecuencia[contadorDeSecuencia] =
-                currentQuestion.options[0];
+            currentQuestion.options[0];
             contadorDeSecuencia++;
             if (contadorDeSecuencia == 4) {
               capture();
@@ -228,9 +255,9 @@ class QuizPageState extends State<QuizPage> {
                     " - " +
                     currentQuestion.options[1],
                 currentQuestion.answer,
-                () => handleAnswer(currentQuestion.options[1]));
+                    () => handleAnswer(currentQuestion.options[1]));
             respuestaSecuencia[contadorDeSecuencia] =
-                currentQuestion.options[1];
+            currentQuestion.options[1];
             contadorDeSecuencia++;
             if (contadorDeSecuencia == 4) {
               capture();
@@ -249,9 +276,9 @@ class QuizPageState extends State<QuizPage> {
                     " - " +
                     currentQuestion.options[2],
                 currentQuestion.answer,
-                () => handleAnswer(currentQuestion.options[2]));
+                    () => handleAnswer(currentQuestion.options[2]));
             respuestaSecuencia[contadorDeSecuencia] =
-                currentQuestion.options[2];
+            currentQuestion.options[2];
             contadorDeSecuencia++;
             if (contadorDeSecuencia == 4) {
               capture();
@@ -270,9 +297,9 @@ class QuizPageState extends State<QuizPage> {
                     " - " +
                     currentQuestion.options[3],
                 currentQuestion.answer,
-                () => handleAnswer(currentQuestion.options[3]));
+                    () => handleAnswer(currentQuestion.options[3]));
             respuestaSecuencia[contadorDeSecuencia] =
-                currentQuestion.options[3];
+            currentQuestion.options[3];
             contadorDeSecuencia++;
             if (contadorDeSecuencia == 4) {
               capture();
@@ -288,7 +315,21 @@ class QuizPageState extends State<QuizPage> {
         }
       });
     }
-    print(currentQuestion.options.indexOf(answer));
+    if (currentQuestion.area == 1) {
+      this.contPreguntasMemoria++;
+      if(isCorrect){this.contPreguntasMemoria++;}
+    }
+    if (currentQuestion.area == 2) {
+      this.contPreguntasOrientacion++;
+      if(isCorrect){this.contBuenasOrientacion++;}
+    }
+    if (currentQuestion.area == 3) {
+      this.contPreguntasJuicio++;
+      if(isCorrect){this.contBuenasJuicio++;}
+    }
+    if(contPreguntasOrientacion+contPreguntasJuicio+contPreguntasMemoria == 10){
+      sendQuizResults();
+    }
   }
 
   @override
@@ -317,50 +358,78 @@ class QuizPageState extends State<QuizPage> {
         ),
         overlayShouldBeVisible == true
             ? new CorrectWrongOverlay(isCorrect, () {
-                if (quiz.length == questionNumber) {
-                  Navigator.of(context).pushAndRemoveUntil(
-                      new MaterialPageRoute(
-                          builder: (BuildContext context) => new ScorePage(
-                              quiz.score, quiz.length, widget.googleId)),
-                      (Route route) => route == null);
-                  return;
-                }
-                currentQuestion = quiz.nextQuestion;
-                this.setState(() {
-                  stopwatch.start();
-                  overlayShouldBeVisible = false;
-                  questionText = currentQuestion.question;
-                  questionNumber = quiz.questionNumber;
-                  hasImage = currentQuestion.hasImage;
-                  questionImagePath = currentQuestion.imageRoute;
-                  contadorDeSecuencia = 0;
-                  respuestaSecuencia = ["", "", "", ""];
-                  answer1 = new AnswerButton(
-                      currentQuestion.options[0],
-                      currentQuestion.answer,
-                      () => handleAnswer(currentQuestion.options[0]));
+          if (quiz.length == questionNumber) {
+            Navigator.of(context).pushAndRemoveUntil(
+                new MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                    new ScorePage(
+                        quiz.score, quiz.length, widget.googleId)),
+                    (Route route) => route == null);
+            return;
+          }
+          currentQuestion = quiz.nextQuestion;
+          this.setState(() {
+            stopwatch.start();
+            overlayShouldBeVisible = false;
+            questionText = currentQuestion.question;
+            questionNumber = quiz.questionNumber;
+            hasImage = currentQuestion.hasImage;
+            questionImagePath = currentQuestion.imageRoute;
+            contadorDeSecuencia = 0;
+            respuestaSecuencia = ["", "", "", ""];
+            answer1 = new AnswerButton(
+                currentQuestion.options[0],
+                currentQuestion.answer,
+                    () => handleAnswer(currentQuestion.options[0]));
 
-                  answer2 = new AnswerButton(
-                      currentQuestion.options[1],
-                      currentQuestion.answer,
-                      () => handleAnswer(currentQuestion.options[1]));
+            answer2 = new AnswerButton(
+                currentQuestion.options[1],
+                currentQuestion.answer,
+                    () => handleAnswer(currentQuestion.options[1]));
 
-                  answer3 = new AnswerButton(
-                      currentQuestion.options[2],
-                      currentQuestion.answer,
-                      () => handleAnswer(currentQuestion.options[2]));
+            answer3 = new AnswerButton(
+                currentQuestion.options[2],
+                currentQuestion.answer,
+                    () => handleAnswer(currentQuestion.options[2]));
 
-                  answer4 = new AnswerButton(
-                      currentQuestion.options[3],
-                      currentQuestion.answer,
-                      () => handleAnswer(currentQuestion.options[3]));
-                  countDown();
-                });
-              })
+            answer4 = new AnswerButton(
+                currentQuestion.options[3],
+                currentQuestion.answer,
+                    () => handleAnswer(currentQuestion.options[3]));
+            countDown();
+          });
+        })
             : new Container()
       ],
     );
     return a;
+  }
+
+  Future<Null> sendQuizResults() async {
+    try {
+      var test = {
+        "google_id": widget.googleId,
+        "memoria": contBuenasMemoria/contPreguntasMemoria,
+        "juicio":contBuenasJuicio/contPreguntasJuicio,
+        "orientacion":contBuenasOrientacion/contPreguntasOrientacion,
+        "fecha": new DateTime.now()
+      };
+      var httpClient = new HttpClient();
+      final String requestBody = json.encode(test);
+      print(requestBody);
+      HttpClientRequest request =
+      await httpClient.postUrl(Uri.parse(URL + '/quiz/upload'))
+        ..headers.add(HttpHeaders.ACCEPT, ContentType.JSON)
+        ..headers.contentType = ContentType.JSON
+        ..headers.contentLength = requestBody.length
+        ..headers.chunkedTransferEncoding = false;
+      request.write(requestBody);
+      HttpClientResponse response = await request.close();
+      print(response);
+      print("YA MANDE LA MONDA");
+    } catch (err) {
+      print(err);
+    }
   }
 
   Future<Null> capture() async {
@@ -385,7 +454,7 @@ class QuizPageState extends State<QuizPage> {
         return;
       }
       setState(
-        () {
+            () {
           imagePath = path;
           _sendEmotion(path);
         },
@@ -406,11 +475,11 @@ class QuizPageState extends State<QuizPage> {
       final String requestBody = json.encode(test);
       print(requestBody);
       HttpClientRequest request =
-          await httpClient.postUrl(Uri.parse(URL + '/users/nextQuiz'))
-            ..headers.add(HttpHeaders.ACCEPT, ContentType.JSON)
-            ..headers.contentType = ContentType.JSON
-            ..headers.contentLength = requestBody.length
-            ..headers.chunkedTransferEncoding = false;
+      await httpClient.postUrl(Uri.parse(URL + '/users/nextQuiz'))
+        ..headers.add(HttpHeaders.ACCEPT, ContentType.JSON)
+        ..headers.contentType = ContentType.JSON
+        ..headers.contentLength = requestBody.length
+        ..headers.chunkedTransferEncoding = false;
       request.write(requestBody);
       HttpClientResponse response = await request.close();
 
@@ -472,22 +541,22 @@ class QuizPageState extends State<QuizPage> {
         answer1 = new AnswerButton(
             currentQuestion.options[0],
             currentQuestion.answer,
-            () => handleAnswer(currentQuestion.options[0]));
+                () => handleAnswer(currentQuestion.options[0]));
 
         answer2 = new AnswerButton(
             currentQuestion.options[1],
             currentQuestion.answer,
-            () => handleAnswer(currentQuestion.options[1]));
+                () => handleAnswer(currentQuestion.options[1]));
 
         answer3 = new AnswerButton(
             currentQuestion.options[2],
             currentQuestion.answer,
-            () => handleAnswer(currentQuestion.options[2]));
+                () => handleAnswer(currentQuestion.options[2]));
 
         answer4 = new AnswerButton(
             currentQuestion.options[3],
             currentQuestion.answer,
-            () => handleAnswer(currentQuestion.options[3]));
+                () => handleAnswer(currentQuestion.options[3]));
       });
     } catch (err) {
       print(err);
