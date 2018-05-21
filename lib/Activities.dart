@@ -203,7 +203,7 @@ class QuizPageState extends State<QuizPage> {
     countDown();
   }
 
-  void handleAnswer(String answer) async{
+  void handleAnswer(String answer) {
     Tts.flush();
     if (isSad && cdAlert != null) {
       subAlert.cancel();
@@ -223,8 +223,24 @@ class QuizPageState extends State<QuizPage> {
         stopwatch.stop();
         print((stopwatch.elapsedMilliseconds / 1000).toString() + "seconds");
         stopwatch.reset();
+        if (currentQuestion.area == 1) {
+      this.contPreguntasMemoria++;
+            print("sume memoria"+this.contPreguntasMemoria.toString());
+      if(isCorrect){this.contBuenasMemoria++;}
+    }
+    if (currentQuestion.area == 2) {
+      this.contPreguntasOrientacion++;
+                  print("sume orientacion"+this.contPreguntasOrientacion.toString());
+      if(isCorrect){this.contBuenasOrientacion++;}
+    }
+    if (currentQuestion.area == 3) {
+      this.contPreguntasJuicio++;
+                              print("sume juicio"+this.contPreguntasJuicio.toString());
+      if(isCorrect){this.contBuenasJuicio++;}
+    }
         overlayShouldBeVisible = true;
       });
+      
     } else {
       this.setState(() {
         if (respuestaSecuencia.indexOf(answer) == -1) {
@@ -246,6 +262,21 @@ class QuizPageState extends State<QuizPage> {
               print((stopwatch.elapsedMilliseconds / 1000).toString() +
                   "seconds");
               stopwatch.reset();
+                            if (currentQuestion.area == 1) {
+                this.contPreguntasMemoria++;
+                 print("sume memoria"+this.contPreguntasMemoria.toString());
+                if(isCorrect){this.contBuenasMemoria++;}
+                }
+              if (currentQuestion.area == 2) {
+                this.contPreguntasOrientacion++;
+                            print("sume orientacion"+this.contPreguntasOrientacion.toString());
+                if(isCorrect){this.contBuenasOrientacion++;}
+              }
+              if (currentQuestion.area == 3) {
+                this.contPreguntasJuicio++;
+                                        print("sume juicio"+this.contPreguntasJuicio.toString());
+                if(isCorrect){this.contBuenasJuicio++;}
+              }
               overlayShouldBeVisible = true;
             }
           }
@@ -267,6 +298,21 @@ class QuizPageState extends State<QuizPage> {
               print((stopwatch.elapsedMilliseconds / 1000).toString() +
                   "seconds");
               stopwatch.reset();
+                            if (currentQuestion.area == 1) {
+                this.contPreguntasMemoria++;
+                 print("sume memoria"+this.contPreguntasMemoria.toString());
+                if(isCorrect){this.contBuenasMemoria++;}
+                }
+              if (currentQuestion.area == 2) {
+                this.contPreguntasOrientacion++;
+                            print("sume orientacion"+this.contPreguntasOrientacion.toString());
+                if(isCorrect){this.contBuenasOrientacion++;}
+              }
+              if (currentQuestion.area == 3) {
+                this.contPreguntasJuicio++;
+                                        print("sume juicio"+this.contPreguntasJuicio.toString());
+                if(isCorrect){this.contBuenasJuicio++;}
+              }
               overlayShouldBeVisible = true;
             }
           }
@@ -288,6 +334,21 @@ class QuizPageState extends State<QuizPage> {
               print((stopwatch.elapsedMilliseconds / 1000).toString() +
                   "seconds");
               stopwatch.reset();
+                            if (currentQuestion.area == 1) {
+                this.contPreguntasMemoria++;
+                 print("sume memoria"+this.contPreguntasMemoria.toString());
+                if(isCorrect){this.contBuenasMemoria++;}
+                }
+              if (currentQuestion.area == 2) {
+                this.contPreguntasOrientacion++;
+                            print("sume orientacion"+this.contPreguntasOrientacion.toString());
+                if(isCorrect){this.contBuenasOrientacion++;}
+              }
+              if (currentQuestion.area == 3) {
+                this.contPreguntasJuicio++;
+                                        print("sume juicio"+this.contPreguntasJuicio.toString());
+                if(isCorrect){this.contBuenasJuicio++;}
+              }
               overlayShouldBeVisible = true;
             }
           }
@@ -309,27 +370,31 @@ class QuizPageState extends State<QuizPage> {
               print((stopwatch.elapsedMilliseconds / 1000).toString() +
                   "seconds");
               stopwatch.reset();
+              if (currentQuestion.area == 1) {
+                this.contPreguntasMemoria++;
+                 print("sume memoria"+this.contPreguntasMemoria.toString());
+                if(isCorrect){this.contBuenasMemoria++;}
+                }
+              if (currentQuestion.area == 2) {
+                this.contPreguntasOrientacion++;
+                            print("sume orientacion"+this.contPreguntasOrientacion.toString());
+                if(isCorrect){this.contBuenasOrientacion++;}
+              }
+              if (currentQuestion.area == 3) {
+                this.contPreguntasJuicio++;
+                                        print("sume juicio"+this.contPreguntasJuicio.toString());
+                if(isCorrect){this.contBuenasJuicio++;}
+              }
               overlayShouldBeVisible = true;
             }
           }
         }
       });
     }
-    if (currentQuestion.area == 1) {
-      this.contPreguntasMemoria++;
-      if(isCorrect){this.contBuenasMemoria++;}
-    }
-    if (currentQuestion.area == 2) {
-      this.contPreguntasOrientacion++;
-      if(isCorrect){this.contBuenasOrientacion++;}
-    }
-    if (currentQuestion.area == 3) {
-      this.contPreguntasJuicio++;
-      if(isCorrect){this.contBuenasJuicio++;}
-    }
+    
     if(contPreguntasOrientacion+contPreguntasJuicio+contPreguntasMemoria == 10){
       print("NO LE CREO");
-      var a = await sendQuizResults();
+      var a = sendQuizResults();
       print(a);
     }
   }
@@ -425,7 +490,7 @@ class QuizPageState extends State<QuizPage> {
       final String requestBody = json.encode(test);
       print(requestBody);
       HttpClientRequest request =
-      await httpClient.postUrl(Uri.parse(URL + '/quiz/upload'))
+      await httpClient.postUrl(Uri.parse(URL + '/users/quiz/upload'))
         ..headers.add(HttpHeaders.ACCEPT, ContentType.JSON)
         ..headers.contentType = ContentType.JSON
         ..headers.contentLength = requestBody.length
