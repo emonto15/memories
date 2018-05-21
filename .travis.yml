@@ -9,9 +9,9 @@ android:
     - tools
     - platform-tools
     - build-tools-27.0.3
-    - android-22
+    - android-21
     - android-27
-    - sys-img-armeabi-v7a-google_apis-22
+    - sys-img-armeabi-v7a-google_apis-21
     - extra-android-m2repository
     - extra-google-m2repository
     - extra-google-android-support
@@ -46,7 +46,7 @@ deploy:
   skip_cleanup: true
   target_commitish: dev
   prerelease: true
-  tag_name: v1.1-beta.1
+  tag_name: v2-beta.3
 
 cache:
   directories:
