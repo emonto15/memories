@@ -104,6 +104,8 @@ class QuizPageState extends State<QuizPage> {
             aux == "fear" ||
             aux == "sadness") {
           isSad = true;
+        }else{
+          sendGustos();
         }
       });
       print("Desde flutter:" + a);
@@ -470,6 +472,30 @@ class QuizPageState extends State<QuizPage> {
       ],
     );
     return a;
+  }
+
+  Future<Null> sendGustos() async {
+    try {
+      var test = {
+        "google_id": widget.googleId,
+        "sumar": currentQuestion.area.toString()+"."+currentQuestion.subarea.toString()
+      };
+      final String requestBody = json.encode(test);
+      print(requestBody);
+      HttpClientRequest request =
+      await httpClient.postUrl(Uri.parse(URL + '/users/quiz/emotion'))
+        ..headers.add(HttpHeaders.ACCEPT, ContentType.JSON)
+        ..headers.contentType = ContentType.JSON
+        ..headers.contentLength = requestBody.length
+        ..headers.chunkedTransferEncoding = false;
+      request.write(requestBody);
+      HttpClientResponse response = await request.close();
+      print(response);
+      print("YA MANDE LA MONDA");
+    } catch (err) {
+      print("PORQUE DANIEL ES UN PELELE");
+      print(err.toString());
+    }
   }
 
   Future<Null> sendQuizResults() async {
