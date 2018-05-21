@@ -1,4 +1,4 @@
-final String URL="http://192.168.1.68:3000";
+final String URL="http://pi2memories.dis.eafit.edu.co";
 final String SPOTIFY_ART="http://backgroundcheckall.com/wp-content/uploads/2017/12/spotify-logo-transparent-background-1.png";
 final Map<String,List<String>> DEPTOS_CIUDADES = { "Amazonas": ["Leticia", "Puerto Nari\u00f1o"],
   "Antioquia": [
