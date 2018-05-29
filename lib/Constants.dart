@@ -1,4 +1,14 @@
-final String URL="http://pi2memories.dis.eafit.edu.co";
+final String URL= "http://192.168.1.65:3000";//"http://pi2memories.dis.eafit.edu.co";
+Map<String,String> genres = { 'Acustica' : "spotify:user:spotify:playlist:37i9dQZF1DWWoDbniQLBJY",
+  'Reggaeton':"spotify:user:spotify:playlist:37i9dQZF1DX4qKWGR9z0LI",
+'Salsa':  "spotify:user:spotify:playlist:37i9dQZF1DX8yLfjPY8emY",
+'Rock':  "spotify:user:spotify:playlist:37i9dQZF1DX1te6miphixI",
+'Baladas': "spotify:user:spotify:playlist:37i9dQZF1DX09mi3a4Zmox",
+'Pop' : "spotify:user:spotify:playlist:37i9dQZF1DWTPDzakLfYZr",
+'Cumbia':"spotify:user:12127298960:playlist:7xWuNevFBmwnFEg6wzdCc7",
+"Tango": "spotify:user:spotify:playlist:37i9dQZF1DXcCT9tm6fRIV"};
+
+
 final String SPOTIFY_ART="http://backgroundcheckall.com/wp-content/uploads/2017/12/spotify-logo-transparent-background-1.png";
 final Map<String,List<String>> DEPTOS_CIUDADES = { "Amazonas": ["Leticia", "Puerto Nari\u00f1o"],
   "Antioquia": [

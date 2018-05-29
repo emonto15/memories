@@ -72,7 +72,7 @@ public class MainActivity extends FlutterActivity implements TextToSpeech.OnInit
 
     private String TOKEN = "";
 
-    private static final String  SPOTIFY_URI = "spotify:user:spotify:playlist:37i9dQZF1DXcCT9tm6fRIV";
+    public String  SPOTIFY_URI = "spotify:user:spotify:playlist:37i9dQZF1DXcCT9tm6fRIV";
 
     private SpotifyPlayer mPlayer;
 
@@ -355,6 +355,7 @@ public class MainActivity extends FlutterActivity implements TextToSpeech.OnInit
                                 break;
                             }
                             case "spotifyLogin":
+                                SPOTIFY_URI = call.argument("uri");
                                 login();
                                 result.success(TOKEN);
                                 break;

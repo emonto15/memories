@@ -142,6 +142,7 @@ class LoginPageState extends State<LoginPage>
     try {
       await _googleSignIn.signIn();
       var currentUser = new Map();
+      var nuevoMapa = new Map();
       currentUser["google_id"] = _googleSignIn.currentUser.id;
 
       final String requestBody = json.encode(currentUser);
@@ -154,7 +155,8 @@ class LoginPageState extends State<LoginPage>
             ..headers.chunkedTransferEncoding = false;
       request.write(requestBody);
       HttpClientResponse response = await request.close();
-      String spotify = await _channel.invokeMethod('spotifyLogin');
+      nuevoMapa = json.decode(await response.transform(utf8.decoder).join());
+      String spotify = await _channel.invokeMethod('spotifyLogin', <String, Object>{'uri': genres[nuevoMapa["genero"]]});
       print(spotify);
       if (json.decode(
               await response.transform(utf8.decoder).join())['registrado'] !=

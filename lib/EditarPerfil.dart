@@ -41,15 +41,14 @@ final List<String> _pasatiempo = <String>[
   'Ver televisión'
 ];
 final List<String> _generoMusical = <String>[
-  'Música clásica',
-  'Blues',
-  'Jazz',
-  'Rock and Roll',
-  'Soul',
+  'Acustica',
+  'Reggaeton',
+  'Salsa',
   'Rock',
+  'Baladas',
   'Pop',
-  'Electronica',
-  'Salsa'
+  'Cumbia',
+  "Tango"
 ];
 final List<String> _capacidadFisica = <String>[
   'Excelente',
